@@ -7,7 +7,7 @@
   <meta name="description" content="免费在线PDF工具箱。合并、拆分、旋转、删除页面——完全在浏览器本地处理，文件永不离开你的设备。">
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.loli.net" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;600&family=ZCOOL+XiaoWei&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
@@ -790,16 +790,18 @@
       max-width: 340px;
     }
 
-    
-@keyframes toastOut {
- from { opacity: 1; transform: translateY(0); }
- to { opacity: 0; transform: translateY(12px); }
-}
-.toast.hiding {
- animation: toastOut 0.3s ease forwards;
-}@keyframes toastIn {
+@keyframes toastIn {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
+    }
+
+@keyframes toastOut {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(12px); }
+    }
+
+    .toast.hiding {
+      animation: toastOut 0.3s ease forwards;
     }
 
     /* ===== PRIVACY FOOTER ===== */
@@ -1021,6 +1023,7 @@
       .tool-panel select, .tool-panel input[type="number"] { padding: 7px 8px; font-size: 0.8rem; }
       .rotate-btn { padding: 6px 10px; font-size: 0.72rem; }
       .file-chip { padding: 6px 10px; font-size: 0.72rem; }
+      .app-main { padding: 24px 16px 60px; }
     }
     /* ===== DARK MODE REFINEMENTS ===== */
     [data-theme="dark"] input[type="range"] { accent-color: var(--accent); }
@@ -1214,7 +1217,6 @@
       <button class="nav-tab" role="tab" data-tool="history" aria-selected="false">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <span>历史</span>
-      </button>
       </button>
     </nav>
 
