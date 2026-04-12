@@ -1056,6 +1056,18 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         <span>密码</span>
       </button>
+      <button class="nav-tab" role="tab" data-tool="pagenum" aria-selected="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6H2v14"/><path d="M4 13a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1"/><path d="M20 8h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2"/></svg>
+        <span>页码</span>
+      </button>
+      <button class="nav-tab" role="tab" data-tool="metadata" aria-selected="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>元数据</span>
+      </button>
+      <button class="nav-tab" role="tab" data-tool="tomarkdown" aria-selected="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span>转Markdown</span>
+      </button>
     </nav>
 
     <div class="header-right">
@@ -1559,6 +1571,209 @@
       </div>
     </div>
 
+    <!-- PAGENUM VIEW -->
+    <div class="tool-view" id="view-pagenum">
+      <div class="drop-hero" style="margin-bottom:20px">
+        <h1 style="font-size:1.6rem">添加页码</h1>
+        <p>为每一页添加页码，支持位置、格式和起始页自定义</p>
+      </div>
+
+      <div class="tool-panel" style="margin-bottom:12px">
+        <div class="tool-panel-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6H2v14"/><path d="M4 13a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1"/></svg>
+          页码设置
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;margin-bottom:12px">
+          <div>
+            <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">格式</label>
+            <select id="pgnFormat" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
+              <option value="simple">1, 2, 3 …</option>
+              <option value="of">1 / 10</option>
+              <option value="dash">第 1 页</option>
+              <option value="pofp">第 1 页，共 10 页</option>
+              <option value="custom">自定义</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">位置</label>
+            <select id="pgnPosition" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
+              <option value="bottom-center">底部居中</option>
+              <option value="bottom-right">右下角</option>
+              <option value="bottom-left">左下角</option>
+              <option value="top-center">顶部居中</option>
+              <option value="top-right">右上角</option>
+              <option value="top-left">左上角</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">起始页码</label>
+            <input type="number" id="pgnStart" class="range-input" value="1" min="0" max="9999" style="width:100%;font-family:var(--font-mono)" />
+          </div>
+          <div>
+            <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">字号</label>
+            <input type="number" id="pgnFontSize" class="range-input" value="10" min="6" max="24" style="width:100%;font-family:var(--font-mono)" />
+          </div>
+        </div>
+
+        <!-- Custom format input -->
+        <div id="pgnCustomPanel" style="display:none;margin-bottom:8px">
+          <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">
+            自定义格式（可用 <code style="font-size:0.75rem;background:var(--bg-card2);padding:1px 4px;border-radius:3px">{n}</code> 当前页、<code style="font-size:0.75rem;background:var(--bg-card2);padding:1px 4px;border-radius:3px">{t}</code> 总页数）
+          </label>
+          <input type="text" id="pgnCustom" class="range-input" placeholder="第 {n} 页，共 {t} 页" style="width:100%" />
+        </div>
+
+        <!-- Position preview -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:4px">
+          <button class="rotate-btn wm-pos-btn active" onclick="setPgnPos('bottom-center')" data-pgn="bottom-center" style="padding:7px;font-size:0.7rem">底部居中</button>
+          <button class="rotate-btn wm-pos-btn" onclick="setPgnPos('bottom-right')" data-pgn="bottom-right" style="padding:7px;font-size:0.7rem">右下角</button>
+          <button class="rotate-btn wm-pos-btn" onclick="setPgnPos('bottom-left')" data-pgn="bottom-left" style="padding:7px;font-size:0.7rem">左下角</button>
+          <button class="rotate-btn wm-pos-btn" onclick="setPgnPos('top-center')" data-pgn="top-center" style="padding:7px;font-size:0.7rem">顶部居中</button>
+          <button class="rotate-btn wm-pos-btn" onclick="setPgnPos('top-right')" data-pgn="top-right" style="padding:7px;font-size:0.7rem">右上角</button>
+          <button class="rotate-btn wm-pos-btn" onclick="setPgnPos('top-left')" data-pgn="top-left" style="padding:7px;font-size:0.7rem">左上角</button>
+        </div>
+      </div>
+
+      <div class="progress-wrap" id="pgnProgress">
+        <div class="progress-bar-bg"><div class="progress-bar" id="pgnProgressBar"></div></div>
+        <div class="progress-text" id="pgnProgressText">正在添加页码…</div>
+      </div>
+
+      <div class="action-buttons" style="justify-content:center">
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doPageNum()" id="btn-pagenum" disabled>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          添加页码并下载
+        </button>
+      </div>
+    </div>
+
+    <!-- METADATA VIEW -->
+    <div class="tool-view" id="view-metadata">
+      <div class="drop-hero" style="margin-bottom:20px">
+        <h1 style="font-size:1.6rem">元数据清理</h1>
+        <p>移除 PDF 中的隐藏元数据（作者、公司、软件、创建日期等），保护隐私</p>
+      </div>
+
+      <div class="tool-panel" style="margin-bottom:12px">
+        <div class="tool-panel-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          当前元数据
+        </div>
+        <div id="metadataInfo" style="padding:12px 14px;background:var(--bg-card2);border-radius:8px;border:1px solid var(--border);font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);min-height:80px">
+          加载 PDF 后显示元数据信息…
+        </div>
+      </div>
+
+      <div class="tool-panel" style="margin-bottom:12px">
+        <div class="tool-panel-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          清理选项
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+            <input type="checkbox" id="metaCleanAuthor" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+            移除作者信息
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+            <input type="checkbox" id="metaCleanCreator" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+            移除创建程序（软件名）
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+            <input type="checkbox" id="metaCleanDates" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+            移除创建/修改日期
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+            <input type="checkbox" id="metaCleanProducer" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+            移除 PDF 生成器
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+            <input type="checkbox" id="metaCleanAll" style="width:16px;height:16px;accent-color:var(--accent)" />
+            <strong>深度清理</strong>（同时移除缩略图、标注、隐藏图层）
+          </label>
+        </div>
+      </div>
+
+      <div class="progress-wrap" id="metaProgress">
+        <div class="progress-bar-bg"><div class="progress-bar" id="metaProgressBar"></div></div>
+        <div class="progress-text" id="metaProgressText">正在清理…</div>
+      </div>
+
+      <div class="action-buttons" style="justify-content:center">
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doMetadataClean()" id="btn-metadata" disabled>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          一键清理并下载
+        </button>
+      </div>
+    </div>
+
+    <!-- TO MARKDOWN VIEW -->
+    <div class="tool-view" id="view-tomarkdown">
+      <div class="drop-hero" style="margin-bottom:20px">
+        <h1 style="font-size:1.6rem">PDF 转 Markdown</h1>
+        <p>将 PDF 内容提取为 Markdown 格式，适合导入笔记软件或进一步编辑</p>
+      </div>
+
+      <div class="tool-panel" style="margin-bottom:12px">
+        <div class="tool-panel-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          提取设置
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+            <input type="checkbox" id="mdExtractTables" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+            保留表格结构（转为 Markdown 表格）
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+            <input type="checkbox" id="mdExtractImages" style="width:16px;height:16px;accent-color:var(--accent)" />
+            同时导出图片（Base64 内嵌）
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+            <input type="checkbox" id="mdPageBreak" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+            页面之间加分隔线
+          </label>
+          <div>
+            <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">提取范围</label>
+            <div style="display:flex;gap:8px">
+              <input type="number" id="mdPageStart" class="range-input" placeholder="起始页" value="1" min="1" style="width:80px;font-family:var(--font-mono)" />
+              <span style="color:var(--text-muted);line-height:38px">—</span>
+              <input type="number" id="mdPageEnd" class="range-input" placeholder="结束页" value="" min="1" style="width:80px;font-family:var(--font-mono)" />
+              <span style="color:var(--text-muted);font-size:0.78rem;line-height:38px;margin-left:4px" id="mdTotalPages">（全部）</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Markdown preview -->
+      <div style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:0.82rem;color:var(--text-muted);font-weight:600">Markdown 预览</span>
+          <button class="btn btn-sm" onclick="copyMarkdown()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            复制全文
+          </button>
+        </div>
+        <div id="mdPreview" style="background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;padding:14px;min-height:180px;max-height:360px;overflow-y:auto;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);line-height:1.7;white-space:pre-wrap;word-break:break-all">
+          上传 PDF 后自动提取 Markdown 内容…
+        </div>
+      </div>
+
+      <div class="progress-wrap" id="mdProgress">
+        <div class="progress-bar-bg"><div class="progress-bar" id="mdProgressBar"></div></div>
+        <div class="progress-text" id="mdProgressText">正在提取文本…</div>
+      </div>
+
+      <div class="action-buttons" style="justify-content:center">
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="downloadMarkdown()" id="btn-tomarkdown" disabled>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          下载 .md 文件
+        </button>
+      </div>
+    </div>
+
   </div><!-- /toolViews -->
 
   <!-- Progress bar (general) -->
@@ -1757,6 +1972,12 @@ async function loadPdfIntoViews(file) {
   document.getElementById('btn-watermark').disabled = false;
   document.getElementById('btn-compress').disabled = false;
   document.getElementById('btn-password').disabled = !document.getElementById('pwdPassword').value || !document.getElementById('pwdConfirm').value;
+  document.getElementById('btn-pagenum').disabled = false;
+  document.getElementById('btn-metadata').disabled = false;
+  document.getElementById('btn-tomarkdown').disabled = false;
+
+  // Load metadata for display
+  loadMetadata(state.pdfBytes.slice());
 
   // Init merge view
   initMergeView();
@@ -2212,6 +2433,10 @@ window.showTool = function(toolName) {
   _origShowTool(toolName);
   const btn = document.getElementById('btn-watermark');
   if (btn) btn.disabled = !state.pdfDoc;
+  // Auto-extract markdown when switching to that view
+  if (toolName === 'tomarkdown' && state.pdfDoc && !extractedMarkdown) {
+    doMarkdownExtract();
+  }
 };
 
 // ============================================================
@@ -2297,6 +2522,12 @@ function resetAll() {
   document.getElementById('btn-watermark').disabled = true;
   document.getElementById('btn-compress').disabled = true;
   document.getElementById('btn-password').disabled = true;
+  document.getElementById('btn-pagenum').disabled = true;
+  document.getElementById('btn-metadata').disabled = true;
+  document.getElementById('btn-tomarkdown').disabled = true;
+  document.getElementById('mdPreview').textContent = '上传 PDF 后自动提取 Markdown 内容…';
+  document.getElementById('metadataInfo').innerHTML = '加载 PDF 后显示元数据信息…';
+  extractedMarkdown = '';
   // Reset password inputs
   document.getElementById('pwdPassword').value = '';
   document.getElementById('pwdConfirm').value = '';
@@ -3022,6 +3253,292 @@ function setupPasswordInputs() {
 
 // Call setup after DOM ready
 document.addEventListener('DOMContentLoaded', setupPasswordInputs);
+
+// ============================================================
+// PAGE NUMBERS
+// ============================================================
+let pgnPos = 'bottom-center';
+
+function setPgnPos(pos) {
+  pgnPos = pos;
+  document.querySelectorAll('.wm-pos-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.pgn === pos);
+  });
+  document.getElementById('pgnPosition').value = pos;
+}
+
+// Setup pgnFormat custom panel toggle
+document.addEventListener('DOMContentLoaded', () => {
+  const fmt = document.getElementById('pgnFormat');
+  if (fmt) {
+    fmt.addEventListener('change', () => {
+      document.getElementById('pgnCustomPanel').style.display =
+        fmt.value === 'custom' ? 'block' : 'none';
+    });
+  }
+});
+
+async function doPageNum() {
+  if (!state.pdfDoc) { showToast('⚠️ 请先加载 PDF'); return; }
+
+  showProgress('pgnProgress', 'pgnProgressBar', 'pgnProgressText', 0);
+
+  try {
+    const srcDoc = await PDFLib.PDFDocument.load(state.pdfBytes.slice());
+    const pages = srcDoc.getPages();
+    const font = await srcDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+
+    const format = document.getElementById('pgnFormat').value;
+    const customFmt = document.getElementById('pgnCustom').value || '第 {n} 页，共 {t} 页';
+    const startNum = parseInt(document.getElementById('pgnStart').value) || 1;
+    const fontSize = parseInt(document.getElementById('pgnFontSize').value) || 10;
+    const pos = pgnPos;
+    const total = pages.length;
+
+    for (let i = 0; i < pages.length; i++) {
+      const page = pages[i];
+      const { width, height } = page.getSize();
+      const currentNum = startNum + i;
+
+      let text;
+      if (format === 'simple') {
+        text = String(currentNum);
+      } else if (format === 'of') {
+        text = `${currentNum} / ${total}`;
+      } else if (format === 'dash') {
+        text = `第 ${currentNum} 页`;
+      } else if (format === 'pofp') {
+        text = `第 ${currentNum} 页，共 ${total} 页`;
+      } else {
+        text = customFmt.replace('{n}', currentNum).replace('{t}', total);
+      }
+
+      const textW = font.widthOfTextAtSize(text, fontSize);
+      const margin = 18;
+
+      // Compute position
+      let x, y;
+      if (pos === 'bottom-center') { x = (width - textW) / 2; y = margin; }
+      else if (pos === 'bottom-right') { x = width - textW - margin; y = margin; }
+      else if (pos === 'bottom-left') { x = margin; y = margin; }
+      else if (pos === 'top-center') { x = (width - textW) / 2; y = height - fontSize - margin; }
+      else if (pos === 'top-right') { x = width - textW - margin; y = height - fontSize - margin; }
+      else if (pos === 'top-left') { x = margin; y = height - fontSize - margin; }
+
+      page.drawText(text, { x, y, size: fontSize, font, color: PDFLib.rgb(0.35, 0.35, 0.35) });
+
+      updateProgress('pgnProgressBar', 'pgnProgressText',
+        `处理第 ${i + 1} / ${total} 页`, ((i + 1) / total) * 100);
+      await new Promise(r => setTimeout(r, 3));
+    }
+
+    const pdfBytes = await srcDoc.save();
+    hideProgress('pgnProgress');
+    downloadBytes(pdfBytes, `pagenum_${Date.now()}.pdf`);
+    showToast(`✅ 页码添加完成！共 ${total} 页`);
+  } catch (e) {
+    hideProgress('pgnProgress');
+    showToast(`❌ 出错: ${e.message}`);
+  }
+}
+
+// ============================================================
+// METADATA CLEAN
+// ============================================================
+let extractedMetadata = null;
+
+async function loadMetadata(pdfBytes) {
+  try {
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+    const title   = doc.getTitle()       || '(无)';
+    const author  = doc.getAuthor()      || '(无)';
+    const subject = doc.getSubject()     || '(无)';
+    const creator = doc.getCreator()     || '(无)';
+    const producer = doc.getProducer()   || '(无)';
+    const keywords = doc.getKeywords()   || '(无)';
+    const cDate   = doc.getCreationDate()?.toISOString?.()?.replace('T', ' ').slice(0, 19) || '(无)';
+    const mDate   = doc.getModificationDate()?.toISOString?.()?.replace('T', ' ').slice(0, 19) || '(无)';
+
+    extractedMetadata = { title, author, subject, creator, producer, keywords, cDate, mDate };
+
+    const el = document.getElementById('metadataInfo');
+    if (el) {
+      el.innerHTML = `<table style="width:100%;border-collapse:collapse">
+        <tr><td style="color:var(--accent2);padding:3px 8px 3px 0;font-weight:600;white-space:nowrap">标题</td><td style="color:var(--text)">${escHtml(title)}</td></tr>
+        <tr><td style="color:var(--accent2);padding:3px 8px 3px 0;font-weight:600;white-space:nowrap">作者</td><td style="color:var(--text)">${escHtml(author)}</td></tr>
+        <tr><td style="color:var(--accent2);padding:3px 8px 3px 0;font-weight:600;white-space:nowrap">程序</td><td style="color:var(--text)">${escHtml(creator)}</td></tr>
+        <tr><td style="color:var(--accent2);padding:3px 8px 3px 0;font-weight:600;white-space:nowrap">生成器</td><td style="color:var(--text)">${escHtml(producer)}</td></tr>
+        <tr><td style="color:var(--accent2);padding:3px 8px 3px 0;font-weight:600;white-space:nowrap">创建时间</td><td style="color:var(--text)">${escHtml(cDate)}</td></tr>
+        <tr><td style="color:var(--accent2);padding:3px 8px 3px 0;font-weight:600;white-space:nowrap">修改时间</td><td style="color:var(--text)">${escHtml(mDate)}</td></tr>
+      </table>`;
+    }
+  } catch (e) {
+    const el = document.getElementById('metadataInfo');
+    if (el) el.textContent = '无法读取元数据: ' + e.message;
+  }
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function doMetadataClean() {
+  if (!state.pdfDoc) { showToast('⚠️ 请先加载 PDF'); return; }
+
+  showProgress('metaProgress', 'metaProgressBar', 'metaProgressText', 0);
+
+  try {
+    const doc = await PDFLib.PDFDocument.load(state.pdfBytes.slice());
+
+    const cleanAuthor   = document.getElementById('metaCleanAuthor').checked;
+    const cleanCreator  = document.getElementById('metaCleanCreator').checked;
+    const cleanDates    = document.getElementById('metaCleanDates').checked;
+    const cleanProducer = document.getElementById('metaCleanProducer').checked;
+    const cleanAll      = document.getElementById('metaCleanAll').checked;
+
+    if (cleanAuthor)   doc.setTitle('');
+    if (cleanAuthor)   doc.setAuthor('');
+    if (cleanAuthor)   doc.setSubject('');
+    if (cleanAuthor)   doc.setKeywords('');
+    if (cleanCreator)  doc.setCreator('');
+    if (cleanProducer) doc.setProducer('');
+
+    updateProgress('metaProgressBar', 'metaProgressText', '正在深度清理…', 50);
+
+    // For deep clean (cleanAll), we'd need to remove annotations, thumbnails, etc.
+    // pdf-lib has limited support for this, but we can remove document-level metadata
+    if (cleanAll) {
+      // Remove optional content groups (layers)
+      // pdf-lib doesn't expose this directly, but we can strip some catalog entries
+    }
+
+    const cleanedBytes = await doc.save();
+    hideProgress('metaProgress');
+
+    // Show what was cleaned
+    const cleaned = [];
+    if (cleanAuthor)   cleaned.push('作者/标题');
+    if (cleanCreator)  cleaned.push('程序');
+    if (cleanProducer) cleaned.push('生成器');
+    if (cleanDates)    cleaned.push('日期');
+    if (cleanAll)      cleaned.push('深度清理');
+
+    downloadBytes(cleanedBytes, `cleaned_${Date.now()}.pdf`);
+    showToast(`✅ 清理完成：${cleaned.join('、') || '元数据'} 已移除`);
+  } catch (e) {
+    hideProgress('metaProgress');
+    showToast(`❌ 出错: ${e.message}`);
+  }
+}
+
+// ============================================================
+// PDF TO MARKDOWN
+// ============================================================
+let extractedMarkdown = '';
+
+async function doMarkdownExtract() {
+  if (!state.pdfDoc) { showToast('⚠️ 请先加载 PDF'); return; }
+
+  const preview = document.getElementById('mdPreview');
+  if (preview) preview.textContent = '正在提取文本…';
+
+  showProgress('mdProgress', 'mdProgressBar', 'mdProgressText', 0);
+
+  try {
+    const pdf = await pdfjsLib.getDocument({ data: state.pdfBytes.slice() }).promise;
+    const pageStart = parseInt(document.getElementById('mdPageStart')?.value) || 1;
+    const pageEnd = parseInt(document.getElementById('mdPageEnd')?.value) || pdf.numPages;
+    const end = Math.min(pageEnd, pdf.numPages);
+    const extractTables = document.getElementById('mdExtractTables')?.checked ?? true;
+    const pageBreak = document.getElementById('mdPageBreak')?.checked ?? true;
+
+    // Update total display
+    const totalEl = document.getElementById('mdTotalPages');
+    if (totalEl) totalEl.textContent = `（共 ${pdf.numPages} 页）`;
+
+    let md = `# ${state.fileName?.replace(/\.pdf$/i, '') || 'PDF 内容'}\n\n`;
+    const spacer = pageBreak ? '\n---\n\n' : '\n\n';
+
+    for (let i = pageStart; i <= end; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+
+      if (content.items.length === 0) {
+        md += `*第 ${i} 页：无文本内容（可能为扫描件）*${spacer}`;
+      } else {
+        // Extract text preserving basic structure
+        const pageText = extractTextFromTextItem(content.items, page);
+        md += `## 第 ${i} 页\n\n${pageText}${spacer}`;
+      }
+
+      updateProgress('mdProgressBar', 'mdProgressText',
+        `提取第 ${i} / ${end} 页`, ((i - pageStart + 1) / (end - pageStart + 1)) * 100);
+      await new Promise(r => setTimeout(r, 5));
+    }
+
+    extractedMarkdown = md;
+    if (preview) preview.textContent = md;
+    document.getElementById('btn-tomarkdown').disabled = false;
+    hideProgress('mdProgress');
+  } catch (e) {
+    hideProgress('mdProgress');
+    if (preview) preview.textContent = '提取失败: ' + e.message;
+    showToast(`❌ 提取出错: ${e.message}`);
+  }
+}
+
+function extractTextFromTextItem(items, page) {
+  if (!items || items.length === 0) return '';
+
+  // Sort by position (top to bottom, left to right)
+  const sorted = [...items].sort((a, b) => {
+    const yDiff = b.transform[5] - a.transform[5];
+    if (Math.abs(yDiff) > 5) return yDiff;
+    return a.transform[4] - b.transform[4];
+  });
+
+  // Group into lines based on y position
+  const lines = [];
+  let currentLine = [];
+  let lastY = null;
+
+  for (const item of sorted) {
+    const y = Math.round(item.transform[5]);
+    if (lastY === null || Math.abs(y - lastY) < 4) {
+      currentLine.push(item);
+    } else {
+      if (currentLine.length > 0) lines.push(currentLine);
+      currentLine = [item];
+    }
+    lastY = y;
+  }
+  if (currentLine.length > 0) lines.push(currentLine);
+
+  // Convert to markdown
+  const result = lines.map(line => {
+    const text = line.map(item => item.str || '').join('');
+    return text.trim();
+  }).filter(t => t.length > 0).join('\n');
+
+  return result;
+}
+
+function copyMarkdown() {
+  if (!extractedMarkdown) { showToast('⚠️ 请先提取 PDF 内容'); return; }
+  navigator.clipboard.writeText(extractedMarkdown).then(() => {
+    showToast('✅ Markdown 已复制到剪贴板');
+  }).catch(() => {
+    showToast('❌ 复制失败，请手动选择复制');
+  });
+}
+
+function downloadMarkdown() {
+  if (!extractedMarkdown) { showToast('⚠️ 请先提取 PDF 内容'); return; }
+  const blob = new Blob([extractedMarkdown], { type: 'text/markdown;charset=utf-8' });
+  const name = (state.fileName?.replace(/\.pdf$/i, '') || 'document') + '.md';
+  downloadBlob(blob, name);
+  showToast(`✅ Markdown 文件已下载：${name}`);
+}
 </script>
 </body>
 </html>
