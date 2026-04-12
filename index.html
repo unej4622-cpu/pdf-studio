@@ -2844,11 +2844,14 @@
 
 <!-- ===== JAVASCRIPT ===== -->
 <script>
-let pdfjsLib = window.pdfjsLib;
+let pdfjsLib;
 async function ensurePdfJs(){
  if(pdfjsLib) return;
- return new Promise(r=>window.addEventListener('pdfjs-ready',()=>{pdfjsLib=window.pdfjsLib;r();},{once:true}));
+ pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
+ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+ window.pdfjsLib = pdfjsLib;
 }
+
 function escHTML(str) {
  const d = document.createElement('div');
  d.textContent = str;
@@ -2976,6 +2979,7 @@ async function loadPdfIntoViews(file) {
   document.getElementById('privacyFooter').style.display = 'none';
 
   // Render thumbnails for each tool view
+ try {
  await ensurePdfJs();
   const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
 
@@ -2988,11 +2992,15 @@ async function loadPdfIntoViews(file) {
       const card = createPageCard(i, state.pageCount, tool);
       // Render thumbnail
       const canvas = card.querySelector('canvas');
-      renderPageThumbnail(pdf, i, canvas).catch(() => {});
+      renderPageThumbnail(pdf, i, canvas).catch(err => console.error('renderPageThumbnail error:', err));
       grid.appendChild(card);
     }
   }
 
+ } catch(err) {
+  console.error('Thumbnail rendering failed:', err);
+  showToast('PDF 预览渲染失败: ' + (err.message || err), 'error');
+}
   // Enable buttons
   document.getElementById('btn-split').disabled = false;
   document.getElementById('btn-pdf2img').disabled = false;
@@ -4913,7 +4921,7 @@ async function renderHighlightGrid() {
       card.appendChild(badge);
     }
     // Render thumbnail using pdf-lib's embedPageThumbnail helper
-    PDFLib.embedPageThumbnail(page, canvas, { scale: 100/width }).catch(() => {});
+    PDFLib.embedPageThumbnail(page, canvas, { scale: 100/width }).catch(err => console.error('renderPageThumbnail error:', err));
     card.appendChild(canvas);
     card.appendChild(label);
     card.addEventListener('click', () => enterHlPage(idx, canvas, page, width, height));
