@@ -2849,6 +2849,12 @@ async function ensurePdfJs(){
  if(pdfjsLib) return;
  return new Promise(r=>window.addEventListener('pdfjs-ready',()=>{pdfjsLib=window.pdfjsLib;r();},{once:true}));
 }
+function escHTML(str) {
+ const d = document.createElement('div');
+ d.textContent = str;
+ return d.innerHTML;
+}
+
 
 
 // STATE
