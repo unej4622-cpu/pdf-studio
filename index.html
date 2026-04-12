@@ -17,6 +17,8 @@
   <!-- pdf-lib & JSZip -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- docx.js for Word document generation -->
+  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
 
   <style>
     /* ===== CSS VARIABLES ===== */
@@ -1068,6 +1070,10 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         <span>转Markdown</span>
       </button>
+      <button class="nav-tab" role="tab" data-tool="toword" aria-selected="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>转Word</span>
+      </button>
     </nav>
 
     <div class="header-right">
@@ -1774,6 +1780,82 @@
       </div>
     </div>
 
+    <!-- TO WORD VIEW -->
+    <div class="tool-view" id="view-toword">
+      <div class="drop-hero" style="margin-bottom:20px">
+        <h1 style="font-size:1.6rem">PDF 转 Word</h1>
+        <p>将 PDF 内容转换为可编辑的 Word 文档（.docx），支持文本、标题和排版的保留</p>
+      </div>
+
+      <div class="tool-panel" style="margin-bottom:12px">
+        <div class="tool-panel-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          转换设置
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;margin-bottom:12px">
+          <div>
+            <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">转换模式</label>
+            <select id="wordMode" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
+              <option value="text">纯文本模式（最快，保留全部文字）</option>
+              <option value="structured">结构化模式（识别标题、段落）</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">提取范围</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input type="number" id="wordPageStart" class="range-input" placeholder="起始" value="1" min="1" style="width:60px;font-family:var(--font-mono)" />
+              <span style="color:var(--text-muted)">—</span>
+              <input type="number" id="wordPageEnd" class="range-input" placeholder="结束" value="" min="1" style="width:60px;font-family:var(--font-mono)" />
+              <span style="color:var(--text-muted);font-size:0.75rem" id="wordTotalPages">（全部）</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+            <input type="checkbox" id="wordPageBreak" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+            页面之间加分页符
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+            <input type="checkbox" id="wordDetectHeading" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+            自动识别标题（基于字号判断）
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+            <input type="checkbox" id="wordExtractTables" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+            保留表格结构
+          </label>
+        </div>
+
+        <div style="margin-top:12px;padding:10px 14px;background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;font-size:0.78rem;color:var(--text-muted)">
+          <strong style="color:var(--accent2)">💡 说明：</strong>此功能提取 PDF 中的文字内容并生成 Word 文档。对于纯文字型 PDF（论文、合同、报告）效果最佳；扫描件（图片型 PDF）无法转换文字。
+        </div>
+      </div>
+
+      <!-- Word preview -->
+      <div style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:0.82rem;color:var(--text-muted);font-weight:600">预览（Word 内容摘要）</span>
+        </div>
+        <div id="wordPreview" style="background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;padding:14px;min-height:160px;max-height:340px;overflow-y:auto;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);line-height:1.7;white-space:pre-wrap;word-break:break-all">
+          点击「开始转换」提取内容并生成 Word 文档…
+        </div>
+      </div>
+
+      <div class="progress-wrap" id="wordProgress">
+        <div class="progress-bar-bg"><div class="progress-bar" id="wordProgressBar"></div></div>
+        <div class="progress-text" id="wordProgressText">正在转换…</div>
+      </div>
+
+      <div class="action-buttons" style="justify-content:center">
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doWordConvert()" id="btn-toword" disabled>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          开始转换并下载
+        </button>
+      </div>
+    </div>
+
   </div><!-- /toolViews -->
 
   <!-- Progress bar (general) -->
@@ -1975,6 +2057,7 @@ async function loadPdfIntoViews(file) {
   document.getElementById('btn-pagenum').disabled = false;
   document.getElementById('btn-metadata').disabled = false;
   document.getElementById('btn-tomarkdown').disabled = false;
+  document.getElementById('btn-toword').disabled = false;
 
   // Load metadata for display
   loadMetadata(state.pdfBytes.slice());
@@ -2433,6 +2516,8 @@ window.showTool = function(toolName) {
   _origShowTool(toolName);
   const btn = document.getElementById('btn-watermark');
   if (btn) btn.disabled = !state.pdfDoc;
+  const wordBtn = document.getElementById('btn-toword');
+  if (wordBtn) wordBtn.disabled = !state.pdfDoc;
   // Auto-extract markdown when switching to that view
   if (toolName === 'tomarkdown' && state.pdfDoc && !extractedMarkdown) {
     doMarkdownExtract();
@@ -2525,7 +2610,10 @@ function resetAll() {
   document.getElementById('btn-pagenum').disabled = true;
   document.getElementById('btn-metadata').disabled = true;
   document.getElementById('btn-tomarkdown').disabled = true;
+  document.getElementById('btn-toword').disabled = true;
   document.getElementById('mdPreview').textContent = '上传 PDF 后自动提取 Markdown 内容…';
+  document.getElementById('wordPreview').textContent = '点击「开始转换」提取内容并生成 Word 文档…';
+  extractedWordData = null;
   document.getElementById('metadataInfo').innerHTML = '加载 PDF 后显示元数据信息…';
   extractedMarkdown = '';
   // Reset password inputs
@@ -3538,6 +3626,247 @@ function downloadMarkdown() {
   const name = (state.fileName?.replace(/\.pdf$/i, '') || 'document') + '.md';
   downloadBlob(blob, name);
   showToast(`✅ Markdown 文件已下载：${name}`);
+}
+
+// ============================================================
+// PDF TO WORD
+// ============================================================
+let extractedWordData = null; // { blob, summary }
+
+async function doWordConvert() {
+  if (!state.pdfDoc) { showToast('⚠️ 请先加载 PDF'); return; }
+
+  const preview = document.getElementById('wordPreview');
+  if (preview) preview.textContent = '正在提取文本…';
+
+  showProgress('wordProgress', 'wordProgressBar', 'wordProgressText', 0);
+
+  try {
+    const pdf = await pdfjsLib.getDocument({ data: state.pdfBytes.slice() }).promise;
+    const pageStart = parseInt(document.getElementById('wordPageStart')?.value) || 1;
+    const pageEnd = parseInt(document.getElementById('wordPageEnd')?.value) || pdf.numPages;
+    const detectHeading = document.getElementById('wordDetectHeading')?.checked ?? true;
+    const extractTables = document.getElementById('wordExtractTables')?.checked ?? true;
+    const pageBreak = document.getElementById('wordPageBreak')?.checked ?? true;
+    const mode = document.getElementById('wordMode')?.value || 'text';
+
+    const end = Math.min(pageEnd, pdf.numPages);
+    const total = end - pageStart + 1;
+
+    // Update total pages display
+    const totalEl = document.getElementById('wordTotalPages');
+    if (totalEl) totalEl.textContent = `（共 ${pdf.numPages} 页）`;
+
+    updateProgress('wordProgressBar', 'wordProgressText', '正在解析页面…', 5);
+
+    // Extract text from all pages
+    const pageTexts = [];
+    let allChars = 0;
+
+    for (let i = pageStart; i <= end; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const pageItems = content.items || [];
+
+      // Compute average font size for heading detection
+      let fontSizes = [];
+      let lastFontSize = 12;
+      for (const item of pageItems) {
+        if (item.str?.trim()) {
+          // Font size from transform matrix
+          const fs = Math.abs(item.transform[0]); // scale factor ~ font size in pt
+          if (fs > 4) fontSizes.push(fs);
+          lastFontSize = fs || lastFontSize;
+        }
+      }
+
+      const avgFontSize = fontSizes.length > 0
+        ? fontSizes.reduce((a, b) => a + b, 0) / fontSizes.length
+        : lastFontSize;
+
+      // Group into paragraphs
+      const paragraphs = groupTextItemsIntoParagraphs(pageItems, page, avgFontSize, detectHeading, extractTables);
+
+      pageTexts.push({ pageNum: i, paragraphs, avgFontSize, totalItems: pageItems.length });
+      allChars += pageItems.reduce((s, it) => s + (it.str?.length || 0), 0);
+
+      updateProgress('wordProgressBar', 'wordProgressText',
+        `解析第 ${i - pageStart + 1} / ${total} 页`, 5 + ((i - pageStart + 1) / total) * 30);
+    }
+
+    updateProgress('wordProgressBar', 'wordProgressText', '正在构建 Word 文档…', 40);
+
+    // Build docx paragraphs
+    const docParagraphs = [];
+    const {
+      Document, Packer, Paragraph, TextRun, HeadingLevel,
+      AlignmentType, PageBreak, Table, TableRow, TableCell,
+      WidthType, BorderStyle
+    } = docx;
+
+    // Document title
+    docParagraphs.push(
+      new Paragraph({
+        children: [new TextRun({ text: state.fileName?.replace(/\.pdf$/i, '') || 'PDF 文档', bold: true, size: 36 })],
+        heading: HeadingLevel.TITLE,
+      })
+    );
+    docParagraphs.push(
+      new Paragraph({ children: [new TextRun({ text: `共 ${total} 页 · ${allChars} 个字符`, size: 20, color: '888888' })] })
+    );
+    docParagraphs.push(new Paragraph({ children: [] })); // spacer
+
+    for (let pi = 0; pi < pageTexts.length; pi++) {
+      const { pageNum, paragraphs } = pageTexts[pi];
+
+      for (const para of paragraphs) {
+        if (para.type === 'pagebreak') {
+          docParagraphs.push(new Paragraph({ children: [new PageBreak()] }));
+          continue;
+        }
+
+        const runs = para.text.trim().split(/(\s{2,})/).map(fragment => {
+          if (/^\s{2,}$/.test(fragment)) {
+            // Multiple spaces → treat as single text (tabs are whitespace)
+            return new TextRun({ text: '    ', size: 22 });
+          }
+          return new TextRun({ text: fragment, size: 22 });
+        }).filter(r => r.text);
+
+        if (runs.length === 0) continue;
+
+        if (para.type === 'heading') {
+          docParagraphs.push(
+            new Paragraph({
+              children: runs,
+              heading: para.level || HeadingLevel.HEADING_2,
+            })
+          );
+        } else {
+          docParagraphs.push(
+            new Paragraph({
+              children: runs,
+              spacing: { after: para.type === 'listitem' ? 80 : 120 },
+            })
+          );
+        }
+      }
+
+      // Page break between pages
+      if (pageBreak && pi < pageTexts.length - 1) {
+        docParagraphs.push(new Paragraph({ children: [new PageBreak()] }));
+      }
+
+      updateProgress('wordProgressBar', 'wordProgressText',
+        `生成第 ${pi + 1} / ${total} 页的 Word 内容`, 40 + ((pi + 1) / total) * 55);
+      await new Promise(r => setTimeout(r, 10));
+    }
+
+    updateProgress('wordProgressBar', 'wordProgressText', '正在打包 docx…', 96);
+
+    const doc = new Document({
+      sections: [{ children: docParagraphs }],
+      creator: 'PDF Studio',
+      title: state.fileName?.replace(/\.pdf$/i, '') || 'PDF 文档',
+    });
+
+    const blob = await Packer.toBlob(doc);
+    hideProgress('wordProgress');
+
+    // Show summary in preview
+    const summary = `✅ 转换完成！\n\n📄 文档：${state.fileName?.replace(/\.pdf$/i, '') || 'PDF'}.docx\n📝 提取页数：${total} 页\n📊 字符数：${allChars} 个\n🔧 模式：${mode === 'structured' ? '结构化' : '纯文本'}\n\n⚠️ 注意：这是文字提取模式，扫描件（图片型 PDF）无法转换。`;
+    if (preview) preview.textContent = summary;
+
+    const docName = (state.fileName?.replace(/\.pdf$/i, '') || 'document') + '.docx';
+    downloadBlob(blob, docName);
+    showToast(`✅ Word 文档已生成：${docName}`);
+  } catch (e) {
+    hideProgress('wordProgress');
+    if (preview) preview.textContent = '转换失败: ' + e.message;
+    showToast(`❌ 转换出错: ${e.message}`);
+  }
+}
+
+function groupTextItemsIntoParagraphs(items, page, avgFontSize, detectHeading, extractTables) {
+  if (!items || items.length === 0) return [];
+
+  // Sort items top-to-bottom, left-to-right
+  const sorted = [...items].sort((a, b) => {
+    const yDiff = Math.round(b.transform[5]) - Math.round(a.transform[5]);
+    if (Math.abs(yDiff) > 5) return yDiff;
+    return Math.round(a.transform[4]) - Math.round(b.transform[4]);
+  });
+
+  // Group by line (y position)
+  const lines = [];
+  let currentLine = [];
+  let lastY = null;
+
+  for (const item of sorted) {
+    const y = Math.round(item.transform[5]);
+    if (lastY === null || Math.abs(y - lastY) < 4) {
+      currentLine.push(item);
+    } else {
+      if (currentLine.length > 0) lines.push([...currentLine]);
+      currentLine = [item];
+    }
+    lastY = y;
+  }
+  if (currentLine.length > 0) lines.push(currentLine);
+
+  // Group lines into paragraphs
+  const paragraphs = [];
+  let currentPara = [];
+  let lastLineY = null;
+  const pageHeight = page.view[3] || 792;
+
+  for (const line of lines) {
+    const lineY = Math.round(line[0].transform[5]);
+    const lineHeight = Math.abs(line[0].transform[0]) || avgFontSize;
+
+    // Check if this line is a heading (significantly larger font)
+    const isHeading = detectHeading && lineHeight > avgFontSize * 1.3;
+
+    // Detect list items: lines starting with bullet chars
+    const firstText = (line[0]?.str || '').trim();
+    const isList = /^[\u2022\u25E6\u25AA\u25CF•\-–—·]\s/.test(firstText) ||
+                   /^[a-zA-Z]\.\s/.test(firstText) ||
+                   /^[0-9]+[\.\)]\s/.test(firstText);
+
+    // New paragraph if: heading, list item, or large gap from previous line
+    const gap = lastLineY !== null ? (lastLineY - lineY) : 0;
+    const newPara = isHeading || isList || gap > lineHeight * 2.5;
+
+    if (newPara && currentPara.length > 0) {
+      paragraphs.push({ type: detectHeading && isLikelyHeading(currentPara, avgFontSize) ? 'heading' : 'paragraph', text: currentPara.map(i => i.str || '').join(''), level: getHeadingLevel(currentPara, avgFontSize) });
+      currentPara = [];
+    }
+
+    currentPara.push(...line);
+    lastLineY = lineY;
+  }
+
+  if (currentPara.length > 0) {
+    paragraphs.push({ type: 'paragraph', text: currentPara.map(i => i.str || '').join(''), level: null });
+  }
+
+  return paragraphs;
+}
+
+function isLikelyHeading(paraItems, avgFontSize) {
+  const sizes = paraItems.map(i => Math.abs(i.transform[0])).filter(s => s > 4);
+  if (sizes.length === 0) return false;
+  const maxSize = Math.max(...sizes);
+  return maxSize > avgFontSize * 1.4;
+}
+
+function getHeadingLevel(paraItems, avgFontSize) {
+  const sizes = paraItems.map(i => Math.abs(i.transform[0])).filter(s => s > 4);
+  if (sizes.length === 0) return null;
+  const maxSize = Math.max(...sizes);
+  if (maxSize > avgFontSize * 2.2) return 'heading1';
+  if (maxSize > avgFontSize * 1.7) return 'heading2';
+  return 'heading3';
 }
 </script>
 </body>
