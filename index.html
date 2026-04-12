@@ -415,6 +415,7 @@
       margin-bottom: 20px;
       box-shadow: var(--shadow-lg);
       overflow: hidden;
+      z-index: 1;
     }
     
     .drop-zone::before {
@@ -479,11 +480,13 @@
 
     .drop-zone input[type="file"] {
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       opacity: 0;
       cursor: pointer;
-      width: 100%;
-      height: 100%;
+      z-index: 10;
     }
 
     .drop-cta {
@@ -3636,7 +3639,10 @@ mainDropZone.addEventListener('drop', (e) => {
   mainDropZone.classList.remove('drag-over');
   handleFiles(e.dataTransfer.files);
 });
-mainFileInput.addEventListener('change', () => handleFiles(mainFileInput.files));
+mainFileInput.addEventListener('change', () => {
+  console.log('[DEBUG] File input changed, files:', mainFileInput.files.length);
+  handleFiles(mainFileInput.files);
+});
 
 // Merge drop zone
 const mergeDropZone = document.getElementById('mergeDropZone');
