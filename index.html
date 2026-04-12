@@ -2848,7 +2848,8 @@ var _pdfReady = false;
 Object.defineProperty(window, 'pdfjsLib', {configurable:true, get(){return pdfjsLib}, set(v){pdfjsLib=v;_pdfReady=true;}});
 async function ensurePdfJs(){while(!_pdfReady) await new Promise(r=>setTimeout(r,30));}
 
-//   const d = document.createElement('div');
+function escHTML(str) {
+  const d = document.createElement('div');
   d.textContent = str;
   return d.innerHTML;
 }
