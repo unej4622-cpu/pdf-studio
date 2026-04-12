@@ -1,14 +1,15 @@
 // PDF墨韵工具 - Service Worker for PWA Offline Support
-const CACHE_NAME = 'pdf-ink-v2';
+const CACHE_NAME = 'pdf-ink-v3';
 const ASSETS = [
   './',
   './index.html',
   './?utm_source=pwa',
-  'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js',
-  'https://cdn.jsdelivr.net/npm/pdf.js@4.4.168/pdf.min.mjs',
-  'https://cdn.jsdelivr.net/npm/jszip@3.10.1/jszip.min.js',
-  'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js',
+  './manifest.json',
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs',
+  'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
   'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js',
+  'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js',
 ];
 
 // Install: cache core assets

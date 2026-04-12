@@ -9,7 +9,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600&family=ZCOOL+XiaoWei&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;600&family=ZCOOL+XiaoWei&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
@@ -790,7 +790,14 @@
       max-width: 340px;
     }
 
-    @keyframes toastIn {
+    
+@keyframes toastOut {
+ from { opacity: 1; transform: translateY(0); }
+ to { opacity: 0; transform: translateY(12px); }
+}
+.toast.hiding {
+ animation: toastOut 0.3s ease forwards;
+}@keyframes toastIn {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
@@ -987,21 +994,11 @@
     .pwd-match-ok  { color: var(--accent2) !important; }
     .pwd-match-err { color: #dc2626 !important; }
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 640px) {
-      .header-inner { padding: 0 16px; gap: 10px; }
-      .logo-text { font-size: 1.1rem; }
-      .nav-tab span { display: none; }
-      .nav-tab { padding: 7px 10px; }
-      .privacy-badge { display: none; }
-      .app-main { padding: 24px 16px 60px; }
-      .drop-hero h1 { font-size: 1.7rem; }
-      .page-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
-    }
     /* ===== MOBILE RESPONSIVE ===== */
     @media (max-width: 640px) {
       html { font-size: 15px; }
       body { margin: 0; }
+      .privacy-badge { display: none; }
       .container { padding: 8px 6px; }
       .header-inner { padding: 8px 10px; flex-wrap: wrap; gap: 8px; }
       .header-title { font-size: 1.1rem; }
@@ -1213,6 +1210,7 @@
       <button class="nav-tab" role="tab" data-tool="wxmini" aria-selected="false">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
         <span>小程序</span>
+      </button>
       <button class="nav-tab" role="tab" data-tool="history" aria-selected="false">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <span>历史</span>
@@ -2608,6 +2606,13 @@
 <!-- ===== JAVASCRIPT ===== -->
 <script type="module">
 // ============================================================
+// ===== 安全工具函数 =====
+function escHTML(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
 // STATE
 // ============================================================
 let state = {
