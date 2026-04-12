@@ -11,8 +11,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;600&family=ZCOOL+XiaoWei&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-  <!-- PDF.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.js"></script></script>
+<script type="module">
+ import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
+ window.pdfjsLib = pdfjsLib;
+ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+</script>
 
   <!-- pdf-lib & JSZip -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
@@ -2839,8 +2842,7 @@
 
 <!-- ===== JAVASCRIPT ===== -->
 <script type="module">
-// ============================================================
-// ===== 安全工具函数 =====
+  const pdfjsLib = window.pdfjsLib;
 function escHTML(str) {
   const d = document.createElement('div');
   d.textContent = str;
@@ -2883,12 +2885,6 @@ themeToggle.addEventListener('click', () => {
   setTheme(next);
 });
 
-// ============================================================
-// PDF.js setup
-// ============================================================
-const pdfjsLib = window.pdfjsLib;
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
 
 // ============================================================
 // FILE LOADING HELPERS
