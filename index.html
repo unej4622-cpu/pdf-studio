@@ -198,67 +198,136 @@
       font-weight: 500;
     }
 
-    /* Nav Tabs - iOS Segmented Control */
+    /* ===== NAVIGATION - MG Flat Style ===== */
     .nav-tabs-wrapper {
       flex: 1;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-      padding: 8px 0;
-      margin: 0 -8px;
+      overflow: visible;
     }
-    .nav-tabs-wrapper::-webkit-scrollbar { display: none; }
     
     .nav-tabs {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 4px;
-      background: var(--bg-tertiary);
-      border-radius: var(--radius-lg);
-      padding: 4px;
-      margin: 0 8px;
     }
-
-    .nav-tab {
+    
+    .nav-group {
+      position: relative;
+    }
+    
+    .nav-group-btn {
       display: flex;
       align-items: center;
       gap: 6px;
       padding: 8px 14px;
-      border-radius: var(--radius-md);
       border: none;
+      border-radius: var(--radius-sm);
       background: transparent;
       color: var(--text-secondary);
-      font-family: var(--font-sans);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 500;
       cursor: pointer;
-      transition: all var(--duration-fast) var(--smooth);
+      transition: all 0.15s ease;
       white-space: nowrap;
-      letter-spacing: -0.01em;
-    }
-
-    .nav-tab:hover {
-      color: var(--text);
-      background: var(--bg-hover)
-    }
-
-    .nav-tab:active {
-      transform: scale(0.97);
-    }
-
-    .nav-tab.active {
-      background: var(--bg-card-solid);
-      color: var(--accent);
-      box-shadow: var(--shadow-sm), var(--shadow-inset);
-    }
-
-    .nav-tab svg { 
-      flex-shrink: 0; 
-      transition: transform var(--duration-fast) var(--spring);
     }
     
-    .nav-tab:active svg {
-      transform: scale(0.9);
+    .nav-group-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text);
+    }
+    
+    .nav-group-btn:active {
+      transform: scale(0.97);
+    }
+    
+    .nav-group-btn .chev {
+      transition: transform 0.2s ease;
+    }
+    
+    .nav-group:hover .nav-group-btn .chev {
+      transform: rotate(180deg);
+    }
+    
+    .nav-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      min-width: 160px;
+      background: var(--bg-card-solid);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: all 0.2s ease;
+      z-index: 1000;
+      padding: 6px;
+    }
+    
+    .nav-group:hover .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .dd-item {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 400;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.1s ease;
+    }
+    
+    .dd-item:hover {
+      background: var(--bg-hover);
+    }
+    
+    .dd-item:active {
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+    
+    .dd-item.active {
+      background: var(--accent-light);
+      color: var(--accent);
+      font-weight: 500;
+    }
+    
+    .nav-icon-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-left: 4px;
+    }
+    
+    .nav-icon-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text);
+    }
+    
+    .nav-icon-btn.active {
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+    
+    [data-theme="dark"] .nav-dropdown {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
     }
 
     .header-right {
@@ -1163,12 +1232,14 @@
     @media (max-width: 640px) {
       html { font-size: 16px; }
       .privacy-badge { display: none; }
-      .header-inner { padding: 0 16px; height: 48px; }
-      .nav-tabs-wrapper { padding: 4px 0; margin: 0 -8px; }
-      .nav-tabs { gap: 3px; padding: 3px; margin: 0 8px; border-radius: var(--radius-md); }
-      .nav-tab { padding: 6px 10px; font-size: 0.78rem; gap: 4px; }
-      .nav-tab svg { width: 14px; height: 14px; }
-      .nav-tab span { display: none; }
+      .header-inner { padding: 0 16px; height: 52px; }
+      .nav-tabs-wrapper { overflow-x: auto; }
+      .nav-tabs { gap: 2px; }
+      .nav-group-btn { padding: 6px 10px; font-size: 0.82rem; }
+      .nav-group-btn span { display: none; }
+      .nav-group-btn .chev { display: none; }
+      .nav-dropdown { position: fixed; left: 16px; right: 16px; min-width: auto; }
+      .nav-icon-btn { width: 32px; height: 32px; }
       .drop-hero { padding-top: 16px; }
       .drop-hero h1 { font-size: 1.6rem; }
       .drop-hero p { font-size: 0.9rem; }
@@ -1309,94 +1380,73 @@
     </a>
 
     <nav class="nav-tabs" role="tablist">
-      <button class="nav-tab active" role="tab" data-tool="merge" aria-selected="true">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/><path d="M16 6h3a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3"/><path d="M12 13v8"/><path d="m9 16 3-3-3-3"/></svg>
-        <span>合并</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="split" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.5A3.5 3.5 0 0 0 8.5 10H3"/><path d="M21 15v5a2 2 0 0 1-2 2h-5"/><path d="M15 3v5"/></svg>
-        <span>拆分</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="rotate" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-        <span>旋转</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="delete" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>
-        <span>删除页</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="reorder" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l4-4 4 4"/><path d="M5 15l4 4 4-4"/><path d="M19 5v14"/></svg>
-        <span>重排</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="pdf2img" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <span>转图片</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="img2pdf" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
-        <span>图片转PDF</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="watermark" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <span>水印</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="compress" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span>压缩</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="password" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <span>密码</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="pagenum" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6H2v14"/><path d="M4 13a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1"/><path d="M20 8h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2"/></svg>
-        <span>页码</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="metadata" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-        <span>元数据</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="tomarkdown" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <span>转Markdown</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="toword" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        <span>转Word</span>
-      </button>
-
-      <button class="nav-tab" role="tab" data-tool="highlight" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
-        <span>高亮</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="sign" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 19.5v.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8.5L18 5.5"/><path d="M7 17h10"/><path d="M7 13h7"/></svg>
-        <span>签名</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="crop" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v4"/><path d="M18 18v4"/><path d="M2 6h4"/><path d="M18 6h4"/><path d="M6 18H2"/><path d="M22 6h-4"/><path d="M6 6V2"/></svg>
-        <span>裁剪</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="ocr" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
-        <span>OCR</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="compare" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/><path d="M10 12h4"/></svg>
-        <span>对比</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="workflow" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="12" r="2"/></svg>
-        <span>工作流</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="wxmini" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
-        <span>小程序</span>
-      </button>
-      <button class="nav-tab" role="tab" data-tool="history" aria-selected="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span>历史</span>
+      <!-- 页面操作 -->
+      <div class="nav-group">
+        <button class="nav-group-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+          <span>页面</span>
+          <svg class="chev" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-dropdown">
+          <button class="dd-item" data-tool="merge"><span>合并 PDF</span></button>
+          <button class="dd-item" data-tool="split"><span>拆分 PDF</span></button>
+          <button class="dd-item" data-tool="rotate"><span>旋转页面</span></button>
+          <button class="dd-item" data-tool="delete"><span>删除页面</span></button>
+          <button class="dd-item" data-tool="reorder"><span>页面排序</span></button>
+          <button class="dd-item" data-tool="crop"><span>裁剪页面</span></button>
+          <button class="dd-item" data-tool="pagenum"><span>添加页码</span></button>
+        </div>
+      </div>
+      
+      <!-- 内容编辑 -->
+      <div class="nav-group">
+        <button class="nav-group-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span>编辑</span>
+          <svg class="chev" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-dropdown">
+          <button class="dd-item" data-tool="watermark"><span>添加水印</span></button>
+          <button class="dd-item" data-tool="highlight"><span>高亮标注</span></button>
+          <button class="dd-item" data-tool="sign"><span>电子签名</span></button>
+          <button class="dd-item" data-tool="password"><span>加密/解密</span></button>
+        </div>
+      </div>
+      
+      <!-- 格式转换 -->
+      <div class="nav-group">
+        <button class="nav-group-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16 3h5v5M8 3H3v5M3 16v5h5M16 21h5v-5"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>转换</span>
+          <svg class="chev" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-dropdown">
+          <button class="dd-item" data-tool="pdf2img"><span>PDF → 图片</span></button>
+          <button class="dd-item" data-tool="img2pdf"><span>图片 → PDF</span></button>
+          <button class="dd-item" data-tool="toword"><span>PDF → Word</span></button>
+          <button class="dd-item" data-tool="tomarkdown"><span>PDF → Markdown</span></button>
+        </div>
+      </div>
+      
+      <!-- 高级工具 -->
+      <div class="nav-group">
+        <button class="nav-group-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          <span>高级</span>
+          <svg class="chev" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-dropdown">
+          <button class="dd-item" data-tool="ocr"><span>OCR 文字识别</span></button>
+          <button class="dd-item" data-tool="compare"><span>PDF 对比</span></button>
+          <button class="dd-item" data-tool="compress"><span>压缩 PDF</span></button>
+          <button class="dd-item" data-tool="metadata"><span>元数据编辑</span></button>
+          <button class="dd-item" data-tool="workflow"><span>自动化工作流</span></button>
+        </div>
+      </div>
+      
+      <!-- 历史记录 - 直接按钮 -->
+      <button class="nav-icon-btn" data-tool="history" title="历史记录">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
       </button>
     </nav>
 
@@ -3395,17 +3445,18 @@ function setupCardClicks() {
 // TOOL NAVIGATION
 // ============================================================
 function showTool(toolName) {
-  document.querySelectorAll('.nav-tab').forEach(t => {
+  // Update nav items (both old .nav-tab and new .dd-item / .nav-icon-btn)
+  document.querySelectorAll('.dd-item, .nav-icon-btn').forEach(t => {
     t.classList.toggle('active', t.dataset.tool === toolName);
-    t.setAttribute('aria-selected', t.dataset.tool === toolName);
   });
   document.querySelectorAll('.tool-view').forEach(v => {
     v.classList.toggle('active', v.id === 'view-' + toolName);
   });
 }
 
-document.querySelectorAll('.nav-tab').forEach(tab => {
-  tab.addEventListener('click', () => showTool(tab.dataset.tool));
+// Add click handlers to dropdown items and icon buttons
+document.querySelectorAll('.dd-item, .nav-icon-btn').forEach(item => {
+  item.addEventListener('click', () => showTool(item.dataset.tool));
 });
 
 // Auto-enable/disable watermark button when switching tools
