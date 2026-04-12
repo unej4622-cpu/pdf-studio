@@ -1360,6 +1360,13 @@
     }
   </style>
   <link rel="manifest" href="manifest.json">
+<script type="module">
+ import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
+ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+ window.pdfjsLib = pdfjsLib;
+ window.dispatchEvent(new Event('pdfjs-ready'));
+</script>
+
 </head>
 <body>
 
@@ -2837,22 +2844,12 @@
 
 <!-- ===== JAVASCRIPT ===== -->
 <script>
-var pdfjsLib;
-(async function(){
- const m = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
- pdfjsLib = m;
- window.pdfjsLib = m;
- pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
-})();
-var _pdfReady = false;
-Object.defineProperty(window, 'pdfjsLib', {configurable:true, get(){return pdfjsLib}, set(v){pdfjsLib=v;_pdfReady=true;}});
-async function ensurePdfJs(){while(!_pdfReady) await new Promise(r=>setTimeout(r,30));}
-
-function escHTML(str) {
-  const d = document.createElement('div');
-  d.textContent = str;
-  return d.innerHTML;
+let pdfjsLib = window.pdfjsLib;
+async function ensurePdfJs(){
+ if(pdfjsLib) return;
+ return new Promise(r=>window.addEventListener('pdfjs-ready',()=>{pdfjsLib=window.pdfjsLib;r();},{once:true}));
 }
+
 
 // STATE
 // ============================================================
