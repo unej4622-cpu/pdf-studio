@@ -3474,6 +3474,7 @@ function setupCardClicks() {
 // ============================================================
 // TOOL NAVIGATION
 // ============================================================
+let wfState = { files: [], steps: [], results: null };
 function showTool(toolName) {
   // Update nav items (both old .nav-tab and new .dd-item / .nav-icon-btn)
   document.querySelectorAll('.dd-item, .nav-icon-btn').forEach(t => {
@@ -4108,10 +4109,6 @@ function hookWmInputs() {
     }
   });
 }
-
-  document.querySelectorAll('.wm-pos-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.pos === pos);
-  });
 
 function handleWmImage(input) {
   const file = input.files[0];
@@ -5599,7 +5596,6 @@ function downloadCompareReport() {
 // ============================================================
 // WORKFLOW EDITOR
 // ============================================================
-let wfState = { files: [], steps: [], results: null };
 
 const STEP_DEFS = {
   merge:    { label: '📎 合并 PDF' },
