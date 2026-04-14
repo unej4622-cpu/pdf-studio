@@ -700,7 +700,273 @@
       transform: scale(0.9);
     }
 
-    /* ===== PAGE GRID ===== */
+    /* ===== DOCUMENT VIEWER ===== */
+    .doc-viewer {
+      position: relative;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 20px
+    }
+
+    .doc-viewer-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border-bottom: 0.5px solid var(--border);
+      gap: 12px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 10
+    }
+
+    .doc-viewer-toolbar .page-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-secondary)
+    }
+
+    .doc-viewer-toolbar .page-nav button {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0
+    }
+
+    .doc-viewer-toolbar .page-nav button:hover {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .doc-viewer-toolbar .page-nav button:disabled {
+      opacity: 0.3;
+      cursor: default
+    }
+
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px
+    }
+
+    .zoom-controls button {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0
+    }
+
+    .zoom-controls button:hover {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .zoom-controls .zoom-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      min-width: 36px;
+      text-align: center
+    }
+
+    .doc-scroll {
+      overflow: auto;
+      max-height: 65vh;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch
+    }
+
+    .doc-page-wrap {
+      position: relative;
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1), 0 4px 16px rgba(0,0,0,0.06);
+      cursor: pointer;
+      transition: box-shadow 0.2s ease;
+      line-height: 0;
+      flex-shrink: 0
+    }
+
+    [data-theme="dark"] .doc-page-wrap {
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3)
+    }
+
+    .doc-page-wrap:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08)
+    }
+
+    .doc-page-wrap.selected {
+      box-shadow: 0 0 0 2.5px var(--accent), 0 4px 16px rgba(0,0,0,0.1)
+    }
+
+    .doc-page-wrap.dragging {
+      opacity: 0.4;
+      transform: scale(0.97);
+      cursor: grabbing
+    }
+
+    .doc-page-wrap canvas {
+      display: block;
+      border-radius: 4px;
+      width: 100%;
+      height: auto
+    }
+
+    .doc-page-label {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      padding: 2px 8px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      backdrop-filter: blur(8px)
+    }
+
+    .doc-page-wrap:hover .doc-page-label,
+    .doc-page-wrap.selected .doc-page-label {
+      opacity: 1
+    }
+
+    .doc-page-actions {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 3
+    }
+
+    .doc-page-wrap:hover .doc-page-actions,
+    .doc-page-wrap.selected .doc-page-actions {
+      opacity: 1
+    }
+
+    .doc-page-actions button {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg-card);
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+      transition: all 0.15s;
+      font-size: 0;
+      backdrop-filter: blur(8px)
+    }
+
+    .doc-page-actions button:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: scale(1.08)
+    }
+
+    .doc-page-actions button.delete:hover {
+      background: #dc2626;
+      color: #fff
+    }
+
+    .doc-page-check {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 4;
+      box-shadow: 0 1px 4px rgba(0,122,255,0.3)
+    }
+
+    .doc-page-wrap.selected .doc-page-check {
+      display: flex
+    }
+
+    .doc-page-wrap.selected .doc-page-actions {
+      opacity: 0
+    }
+
+    .drag-handle {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      padding: 2px 8px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      cursor: grab;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 2
+    }
+
+    .doc-page-wrap:hover .drag-handle {
+      opacity: 1
+    }
+
+    .drag-handle:active {
+      cursor: grabbing
+    }
+
+    /* Mobile */
+    @media (max-width: 640px) {
+      .doc-scroll {
+        max-height: 55vh;
+        padding: 16px 8px
+      }
+      .doc-viewer-toolbar {
+        padding: 6px 12px;
+        gap: 8px
+      }
+    }
+
+    /* ===== LEGACY PAGE GRID (keep for highlight grid) ===== */
     .page-grid-wrap {
       margin-bottom: 24px;
     }
@@ -1630,8 +1896,21 @@
         <p>按页面范围拆分，或将每一页单独导出</p>
       </div>
 
-      <div class="page-grid-wrap">
-        <div class="page-grid" id="splitPageGrid"></div>
+      <div class="doc-viewer" id="splitViewer">
+        <div class="doc-viewer-toolbar">
+          <div class="page-nav">
+            <button onclick="docNav('split','prev')" title="上一页">‹</button>
+            <span id="splitPageInfo">1 / 1</span>
+            <button onclick="docNav('split','next')" title="下一页">›</button>
+          </div>
+          <div class="zoom-controls">
+            <button onclick="docZoom('split','out')" title="缩小">−</button>
+            <span class="zoom-label" id="splitZoomLabel">100%</span>
+            <button onclick="docZoom('split','in')" title="放大">+</button>
+            <button onclick="docZoom('split','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+          </div>
+        </div>
+        <div class="doc-scroll" id="splitScroll"></div>
       </div>
 
       <div class="tool-panel">
@@ -1667,8 +1946,21 @@
         <p>选中页面后，选择旋转角度</p>
       </div>
 
-      <div class="page-grid-wrap">
-        <div class="page-grid" id="rotatePageGrid"></div>
+      <div class="doc-viewer" id="rotateViewer">
+        <div class="doc-viewer-toolbar">
+          <div class="page-nav">
+            <button onclick="docNav('rotate','prev')" title="上一页">‹</button>
+            <span id="rotatePageInfo">1 / 1</span>
+            <button onclick="docNav('rotate','next')" title="下一页">›</button>
+          </div>
+          <div class="zoom-controls">
+            <button onclick="docZoom('rotate','out')" title="缩小">−</button>
+            <span class="zoom-label" id="rotateZoomLabel">100%</span>
+            <button onclick="docZoom('rotate','in')" title="放大">+</button>
+            <button onclick="docZoom('rotate','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+          </div>
+        </div>
+        <div class="doc-scroll" id="rotateScroll"></div>
       </div>
 
       <div class="selection-bar" id="rotateSelBar">
@@ -1707,8 +1999,21 @@
         <p>点击页面卡片选中（红色边框），然后确认删除</p>
       </div>
 
-      <div class="page-grid-wrap">
-        <div class="page-grid" id="deletePageGrid"></div>
+      <div class="doc-viewer" id="deleteViewer">
+        <div class="doc-viewer-toolbar">
+          <div class="page-nav">
+            <button onclick="docNav('delete','prev')" title="上一页">‹</button>
+            <span id="deletePageInfo">1 / 1</span>
+            <button onclick="docNav('delete','next')" title="下一页">›</button>
+          </div>
+          <div class="zoom-controls">
+            <button onclick="docZoom('delete','out')" title="缩小">−</button>
+            <span class="zoom-label" id="deleteZoomLabel">100%</span>
+            <button onclick="docZoom('delete','in')" title="放大">+</button>
+            <button onclick="docZoom('delete','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+          </div>
+        </div>
+        <div class="doc-scroll" id="deleteScroll"></div>
       </div>
 
       <div class="selection-bar" id="deleteSelBar">
@@ -1738,8 +2043,21 @@
         <p>拖拽页面卡片调整顺序，满意后点击下载</p>
       </div>
 
-      <div class="page-grid-wrap">
-        <div class="page-grid" id="reorderPageGrid"></div>
+      <div class="doc-viewer" id="reorderViewer">
+        <div class="doc-viewer-toolbar">
+          <div class="page-nav">
+            <button onclick="docNav('reorder','prev')" title="上一页">‹</button>
+            <span id="reorderPageInfo">1 / 1</span>
+            <button onclick="docNav('reorder','next')" title="下一页">›</button>
+          </div>
+          <div class="zoom-controls">
+            <button onclick="docZoom('reorder','out')" title="缩小">−</button>
+            <span class="zoom-label" id="reorderZoomLabel">100%</span>
+            <button onclick="docZoom('reorder','in')" title="放大">+</button>
+            <button onclick="docZoom('reorder','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+          </div>
+        </div>
+        <div class="doc-scroll" id="reorderScroll"></div>
       </div>
 
       <div class="action-buttons" style="justify-content:center">
@@ -1758,8 +2076,21 @@
         <p>将 PDF 每一页导出为 PNG 图片，支持选择分辨率</p>
       </div>
 
-      <div class="page-grid-wrap">
-        <div class="page-grid" id="pdf2imgPageGrid"></div>
+      <div class="doc-viewer" id="pdf2imgViewer">
+        <div class="doc-viewer-toolbar">
+          <div class="page-nav">
+            <button onclick="docNav('pdf2img','prev')" title="上一页">‹</button>
+            <span id="pdf2imgPageInfo">1 / 1</span>
+            <button onclick="docNav('pdf2img','next')" title="下一页">›</button>
+          </div>
+          <div class="zoom-controls">
+            <button onclick="docZoom('pdf2img','out')" title="缩小">−</button>
+            <span class="zoom-label" id="pdf2imgZoomLabel">100%</span>
+            <button onclick="docZoom('pdf2img','in')" title="放大">+</button>
+            <button onclick="docZoom('pdf2img','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+          </div>
+        </div>
+        <div class="doc-scroll" id="pdf2imgScroll"></div>
       </div>
 
       <div class="tool-panel">
@@ -2980,6 +3311,141 @@ let state = {
 };
 
 // ============================================================
+// DOCUMENT VIEWER STATE & CONTROLS
+// ============================================================
+const docViewers = {};   // toolName -> { zoom, scrollEl, pages[], currentPage }
+const ZOOM_LEVELS = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
+
+function initDocViewer(toolName) {
+  const scroll = document.getElementById(toolName + 'Scroll');
+  if (!scroll) return null;
+  docViewers[toolName] = { zoom: 1.0, scrollEl: scroll, pages: [], currentPage: 1 };
+  return docViewers[toolName];
+}
+
+function docZoom(toolName, dir) {
+  const v = docViewers[toolName];
+  if (!v) return;
+  if (dir === 'fit') {
+    v.zoom = 'fit';
+  } else if (dir === 'in') {
+    if (v.zoom === 'fit') v.zoom = 1.0;
+    const idx = ZOOM_LEVELS.findIndex(z => z > v.zoom + 0.01);
+    v.zoom = idx >= 0 ? ZOOM_LEVELS[idx] : ZOOM_LEVELS[ZOOM_LEVELS.length - 1];
+  } else if (dir === 'out') {
+    if (v.zoom === 'fit') v.zoom = 1.0;
+    const idx = ZOOM_LEVELS.findIndex(z => z >= v.zoom - 0.01);
+    v.zoom = idx > 0 ? ZOOM_LEVELS[idx - 1] : ZOOM_LEVELS[0];
+  }
+  // Debounce re-render
+  clearTimeout(v._zoomTimer);
+  v._zoomTimer = setTimeout(() => renderDocPages(toolName), 150);
+  updateZoomLabel(toolName);
+}
+
+function docNav(toolName, dir) {
+  const v = docViewers[toolName];
+  if (!v || !v.pages.length) return;
+  const target = dir === 'prev' ? Math.max(1, v.currentPage - 1) : Math.min(v.pages.length, v.currentPage + 1);
+  v.currentPage = target;
+  const el = v.pages[target - 1];
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  updatePageInfo(toolName);
+}
+
+function updatePageInfo(toolName) {
+  const v = docViewers[toolName];
+  const infoEl = document.getElementById(toolName + 'PageInfo');
+  if (infoEl && v) infoEl.textContent = v.currentPage + ' / ' + (v.pages.length || 1);
+}
+
+function updateZoomLabel(toolName) {
+  const v = docViewers[toolName];
+  const labelEl = document.getElementById(toolName + 'ZoomLabel');
+  if (labelEl && v) labelEl.textContent = v.zoom === 'fit' ? '适应' : Math.round(v.zoom * 100) + '%';
+}
+
+async function renderDocPages(toolName) {
+  const v = docViewers[toolName];
+  if (!v || !state.pdfBytes) return;
+  const scroll = v.scrollEl;
+  const zoom = v.zoom === 'fit' ? 'fit' : v.zoom;
+
+  // Calculate effective zoom
+  let effectiveZoom = zoom;
+  if (zoom === 'fit') {
+    const containerWidth = scroll.clientWidth - 48;
+    effectiveZoom = Math.max(0.5, containerWidth / 595);
+  }
+
+  const pageWidth = Math.round(595 * effectiveZoom);
+
+  // Re-render all pages at new zoom level
+  try {
+    const pdf = await pdfjsLib.getDocument({ data: state.pdfBytes.slice() }).promise;
+    const renderScale = effectiveZoom * 1.5; // 1.5x for retina quality
+
+    for (let i = 0; i < v.pages.length; i++) {
+      const wrap = v.pages[i];
+      if (!wrap) continue;
+      const canvas = wrap.querySelector('canvas');
+      if (!canvas) continue;
+
+      const rotationDeg = state.pageRotations[parseInt(wrap.dataset.page)] || 0;
+      const page = await pdf.getPage(i + 1);
+      const viewport = page.getViewport({ scale: renderScale, rotation: rotationDeg });
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      canvas._rendered = true;
+      canvas.style.width = pageWidth + 'px';
+    }
+  } catch(err) {
+    console.error('Re-render failed:', err);
+    // Fallback: just resize CSS
+    v.pages.forEach(wrap => {
+      if (!wrap) return;
+      wrap.style.width = pageWidth + 'px';
+      const canvas = wrap.querySelector('canvas');
+      if (canvas && canvas._rendered) canvas.style.width = pageWidth + 'px';
+    });
+  }
+
+  updateZoomLabel(toolName);
+}
+
+function setupDocScrollObserver(toolName) {
+  const v = docViewers[toolName];
+  if (!v) return;
+  const scroll = v.scrollEl;
+  // Track current visible page
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = v.pages.indexOf(e.target);
+        if (idx >= 0) { v.currentPage = idx + 1; updatePageInfo(toolName); }
+      }
+    });
+  }, { root: scroll, threshold: 0.5 });
+  v.pages.forEach(p => { if (p) observer.observe(p); });
+  v._observer = observer;
+}
+
+// Re-fit on window resize
+let _resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(() => {
+    Object.keys(docViewers).forEach(tool => {
+      if (docViewers[tool].zoom === 'fit') renderDocPages(tool);
+    });
+  }, 200);
+});
+
+// ============================================================
 // THEME
 // ============================================================
 const themeToggle = document.getElementById('themeToggle');
@@ -3085,27 +3551,99 @@ async function loadPdfIntoViews(file) {
   document.getElementById('toolViews').style.display = 'block';
   document.getElementById('privacyFooter').style.display = 'none';
 
-  // Render thumbnails for each tool view
+  // Render pages into document viewers
  try {
  await ensurePdfJs();
   const pdf = await pdfjsLib.getDocument({ data: state.pdfBytes.slice() }).promise;
 
   const tools = ['split', 'rotate', 'delete', 'reorder', 'pdf2img'];
   for (const tool of tools) {
-    const grid = document.getElementById(tool + 'PageGrid');
-    grid.innerHTML = '';
+    const v = initDocViewer(tool);
+    if (!v) continue;
+    const scroll = v.scrollEl;
+    scroll.innerHTML = '';
+    v.pages = [];
+
+    // Calculate initial fit-width zoom
+    const containerWidth = scroll.clientWidth - 48;
+    const firstPage = await pdf.getPage(1);
+    const baseViewport = firstPage.getViewport({ scale: 1.0 });
+    const fitZoom = Math.max(0.5, containerWidth / baseViewport.width);
+    v.zoom = 'fit';
 
     for (let i = 0; i < state.pageCount; i++) {
-      const card = createPageCard(i, state.pageCount, tool);
-      // Render thumbnail
-      const canvas = card.querySelector('canvas');
-      renderPageThumbnail(pdf, i, canvas).catch(err => console.error('renderPageThumbnail error:', err));
-      grid.appendChild(card);
+      const wrap = document.createElement('div');
+      wrap.className = 'doc-page-wrap';
+      wrap.dataset.page = i;
+      wrap.dataset.tool = tool;
+
+      const rotationDeg = state.pageRotations[i] || 0;
+
+      // Label
+      const label = document.createElement('div');
+      label.className = 'doc-page-label';
+      label.textContent = 'P.' + (i + 1) + ' / ' + state.pageCount;
+      wrap.appendChild(label);
+
+      // Actions (rotate/delete tools)
+      const actions = document.createElement('div');
+      actions.className = 'doc-page-actions';
+      if (tool === 'rotate' || tool === 'delete') {
+        actions.innerHTML = `
+          <button class="delete" title="${tool === 'delete' ? '标记删除' : '移除'}" data-action="select">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>
+          </button>`;
+      }
+      wrap.appendChild(actions);
+
+      // Check mark
+      const check = document.createElement('div');
+      check.className = 'doc-page-check';
+      check.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      wrap.appendChild(check);
+
+      // Drag handle for reorder
+      if (tool === 'reorder') {
+        const handle = document.createElement('div');
+        handle.className = 'drag-handle';
+        handle.textContent = '☰ 拖拽排序';
+        wrap.appendChild(handle);
+        wrap.draggable = true;
+      }
+
+      // Canvas
+      const canvas = document.createElement('canvas');
+      wrap.appendChild(canvas);
+      scroll.appendChild(wrap);
+      v.pages.push(wrap);
+
+      // Render at readable resolution (1.5x for retina-like quality)
+      const renderScale = fitZoom * 1.5;
+      (async () => {
+        try {
+          const page = await pdf.getPage(i + 1);
+          const viewport = page.getViewport({ scale: renderScale, rotation: rotationDeg });
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          await page.render({ canvasContext: ctx, viewport }).promise;
+          canvas._rendered = true;
+          canvas.style.width = Math.round(baseViewport.width * fitZoom) + 'px';
+        } catch (err) {
+          console.error('Page render error:', err);
+        }
+      })();
     }
+
+    setupDocScrollObserver(tool);
+    updatePageInfo(tool);
+    updateZoomLabel(tool);
   }
 
  } catch(err) {
-  console.error('Thumbnail rendering failed:', err);
+  console.error('Document viewer rendering failed:', err);
   showToast('PDF 预览渲染失败: ' + (err.message || err), 'error');
 }
   // Enable buttons
@@ -3283,17 +3821,15 @@ function clearRotateSelection() {
 }
 
 function updateRotateCards() {
-  const grid = document.getElementById('rotatePageGrid');
-  grid.querySelectorAll('.page-card').forEach(card => {
-    const idx = parseInt(card.dataset.page);
+  const v = docViewers['rotate'];
+  if (!v) return;
+  v.pages.forEach(wrap => {
+    const idx = parseInt(wrap.dataset.page);
     const isSelected = state.selectedPages.has(idx);
-    card.classList.toggle('selected', isSelected);
-
+    wrap.classList.toggle('selected', isSelected);
     const rot = state.pageRotations[idx] || 0;
-    const canvas = card.querySelector('canvas');
-    if (canvas) {
-      canvas.style.transform = `rotate(${rot}deg)`;
-    }
+    const canvas = wrap.querySelector('canvas');
+    if (canvas) canvas.style.transform = `rotate(${rot}deg)`;
   });
 }
 
@@ -3346,16 +3882,15 @@ async function doRotate(degrees) {
 
   hideProgress('generalProgress');
 
-  // Re-render thumbnails
- await ensurePdfJs();
-  const pdf = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
-  const grid = document.getElementById('rotatePageGrid');
-  const cards = grid.querySelectorAll('.page-card');
-  for (const card of cards) {
-    const idx = parseInt(card.dataset.page);
-    const canvas = card.querySelector('canvas');
-    const rot = state.pageRotations[idx] || 0;
-    canvas.style.transform = `rotate(${rot}deg)`;
+  // Re-render rotate view pages
+  const v = docViewers['rotate'];
+  if (v) {
+    v.pages.forEach(wrap => {
+      const idx = parseInt(wrap.dataset.page);
+      const rot = state.pageRotations[idx] || 0;
+      const canvas = wrap.querySelector('canvas');
+      if (canvas) canvas.style.transform = `rotate(${rot}deg)`;
+    });
   }
 
   downloadBytes(pdfBytes, `rotated_${Date.now()}.pdf`);
@@ -3375,11 +3910,12 @@ function clearDeleteSelection() {
 }
 
 function updateDeleteCards() {
-  const grid = document.getElementById('deletePageGrid');
-  grid.querySelectorAll('.page-card').forEach(card => {
-    const idx = parseInt(card.dataset.page);
+  const v = docViewers['delete'];
+  if (!v) return;
+  v.pages.forEach(wrap => {
+    const idx = parseInt(wrap.dataset.page);
     const isSelected = state.selectedPages.has(idx);
-    card.classList.toggle('selected', isSelected);
+    wrap.classList.toggle('selected', isSelected);
   });
 }
 
@@ -3464,38 +4000,46 @@ async function doReorder() {
 // DRAG & DROP REORDER
 // ============================================================
 function setupReorderDrag() {
-  const grid = document.getElementById('reorderPageGrid');
+  const v = docViewers['reorder'];
+  if (!v) return;
+  const scroll = v.scrollEl;
   let draggedCard = null;
 
-  grid.addEventListener('dragstart', (e) => {
-    draggedCard = e.target.closest('.page-card');
+  scroll.addEventListener('dragstart', (e) => {
+    draggedCard = e.target.closest('.doc-page-wrap');
     if (!draggedCard) return;
     draggedCard.classList.add('dragging');
     e.dataTransfer.effectAllowed = 'move';
   });
 
-  grid.addEventListener('dragend', () => {
+  scroll.addEventListener('dragend', () => {
     if (draggedCard) draggedCard.classList.remove('dragging');
-    grid.querySelectorAll('.page-card').forEach(c => c.classList.remove('drag-over-card'));
+    scroll.querySelectorAll('.doc-page-wrap').forEach(c => c.classList.remove('drag-over-card'));
     draggedCard = null;
   });
 
-  grid.addEventListener('dragover', (e) => {
+  scroll.addEventListener('dragover', (e) => {
     e.preventDefault();
-    const card = e.target.closest('.page-card');
+    const card = e.target.closest('.doc-page-wrap');
     if (!card || card === draggedCard) return;
-    grid.querySelectorAll('.page-card').forEach(c => c.classList.remove('drag-over-card'));
-    card.classList.add('drag-over-card');
+    scroll.querySelectorAll('.doc-page-wrap').forEach(c => c.classList.remove('drag-over-card'));
+    card.style.outline = '2px dashed var(--accent2)';
+    card.style.outlineOffset = '4px';
   });
 
-  grid.addEventListener('drop', (e) => {
+  scroll.addEventListener('dragleave', (e) => {
+    const card = e.target.closest('.doc-page-wrap');
+    if (card) { card.style.outline = ''; card.style.outlineOffset = ''; }
+  });
+
+  scroll.addEventListener('drop', (e) => {
     e.preventDefault();
-    const target = e.target.closest('.page-card');
+    const target = e.target.closest('.doc-page-wrap');
     if (!target || !draggedCard || target === draggedCard) return;
 
-    const cards = [...grid.querySelectorAll('.page-card')];
-    const fromIdx = cards.indexOf(draggedCard);
-    const toIdx = cards.indexOf(target);
+    const wraps = [...scroll.querySelectorAll('.doc-page-wrap')];
+    const fromIdx = wraps.indexOf(draggedCard);
+    const toIdx = wraps.indexOf(target);
 
     // Update orderedPages
     const [moved] = state.orderedPages.splice(fromIdx, 1);
@@ -3508,15 +4052,18 @@ function setupReorderDrag() {
       target.before(draggedCard);
     }
 
-    // Update page numbers in DOM
-    cards.forEach((card, i) => {
+    // Update page labels
+    scroll.querySelectorAll('.doc-page-wrap').forEach((wrap, i) => {
       const origIdx = state.orderedPages[i];
-      card.dataset.page = origIdx;
-      card.querySelector('.page-num').textContent = `${origIdx + 1} / ${state.pageCount}`;
-      card.querySelector('.page-card-label span:last-child').textContent = `P.${origIdx + 1}`;
+      wrap.dataset.page = origIdx;
+      const label = wrap.querySelector('.doc-page-label');
+      if (label) label.textContent = 'P.' + (origIdx + 1) + ' / ' + state.pageCount;
     });
 
-    grid.querySelectorAll('.page-card').forEach(c => c.classList.remove('drag-over-card'));
+    scroll.querySelectorAll('.doc-page-wrap').forEach(c => {
+      c.style.outline = '';
+      c.style.outlineOffset = '';
+    });
     updateReorderSelBar();
   });
 }
@@ -3525,43 +4072,48 @@ function setupReorderDrag() {
 // CARD CLICK HANDLERS
 // ============================================================
 function setupCardClicks() {
-  // Rotate view
-  document.getElementById('rotatePageGrid').addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-action="delete"]');
-    if (btn) {
-      const card = btn.closest('.page-card');
-      const idx = parseInt(card.dataset.page);
-      state.selectedPages.add(idx);
+  // Rotate view — use doc viewer scroll
+  const rotateScroll = docViewers['rotate']?.scrollEl;
+  if (rotateScroll) {
+    rotateScroll.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-action="select"]');
+      if (btn) {
+        const wrap = btn.closest('.doc-page-wrap');
+        const idx = parseInt(wrap.dataset.page);
+        state.selectedPages.add(idx);
+        updateRotateCards();
+        updateRotateSelBar();
+        return;
+      }
+      const wrap = e.target.closest('.doc-page-wrap');
+      if (!wrap) return;
+      const idx = parseInt(wrap.dataset.page);
+      if (state.selectedPages.has(idx)) {
+        state.selectedPages.delete(idx);
+      } else {
+        state.selectedPages.add(idx);
+      }
       updateRotateCards();
       updateRotateSelBar();
-      return;
-    }
-    const card = e.target.closest('.page-card');
-    if (!card) return;
-    const idx = parseInt(card.dataset.page);
-    if (state.selectedPages.has(idx)) {
-      state.selectedPages.delete(idx);
-    } else {
-      state.selectedPages.add(idx);
-    }
-    updateRotateCards();
-    updateRotateSelBar();
-  });
+    });
+  }
 
-  // Delete view
-  document.getElementById('deletePageGrid').addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-action="delete"]');
-    const card = e.target.closest('.page-card');
-    if (!card) return;
-    const idx = parseInt(card.dataset.page);
-    if (state.selectedPages.has(idx)) {
-      state.selectedPages.delete(idx);
-    } else {
-      state.selectedPages.add(idx);
-    }
-    updateDeleteCards();
-    updateDeleteSelBar();
-  });
+  // Delete view — use doc viewer scroll
+  const deleteScroll = docViewers['delete']?.scrollEl;
+  if (deleteScroll) {
+    deleteScroll.addEventListener('click', (e) => {
+      const wrap = e.target.closest('.doc-page-wrap');
+      if (!wrap) return;
+      const idx = parseInt(wrap.dataset.page);
+      if (state.selectedPages.has(idx)) {
+        state.selectedPages.delete(idx);
+      } else {
+        state.selectedPages.add(idx);
+      }
+      updateDeleteCards();
+      updateDeleteSelBar();
+    });
+  }
 }
 
 // ============================================================
@@ -3677,6 +4229,14 @@ function showToast(message) {
 // RESET
 // ============================================================
 function resetAll() {
+  // Cleanup doc viewers
+  Object.keys(docViewers).forEach(tool => {
+    const v = docViewers[tool];
+    if (v._observer) v._observer.disconnect();
+    if (v.scrollEl) v.scrollEl.innerHTML = '';
+    delete docViewers[tool];
+  });
+
   state = {
     pdfDoc: null, pdfBytes: null, fileName: '', pageCount: 0,
     pageRotations: {}, selectedPages: new Set(),
