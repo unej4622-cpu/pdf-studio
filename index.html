@@ -2716,13 +2716,22 @@
         <button class="btn btn-sm" onclick="clearHighlights()" style="margin-left:auto">清空全部</button>
       </div>
 
-      <div class="tool-panel" style="margin-bottom:12px">
-        <div class="tool-panel-title">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
-          选择页面 → 点击缩略图画标注区域
+      <div class="doc-viewer" id="highlightViewer">
+        <div class="doc-viewer-toolbar">
+          <div class="page-nav">
+            <button onclick="docNav('highlight','prev')" title="上一页">‹</button>
+            <span id="highlightPageInfo">1 / 1</span>
+            <button onclick="docNav('highlight','next')" title="下一页">›</button>
+          </div>
+          <div class="zoom-controls">
+            <button onclick="docZoom('highlight','out')" title="缩小">−</button>
+            <span class="zoom-label" id="highlightZoomLabel">100%</span>
+            <button onclick="docZoom('highlight','in')" title="放大">+</button>
+            <button onclick="docZoom('highlight','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+          </div>
+          <div style="margin-left:auto;font-size:0.75rem;color:var(--text-muted)">🖱️ 在页面上拖动添加标注</div>
         </div>
-        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px">点击下方缩略图进入该页标注模式，在图上拖动选择高亮区域</p>
-        <div id="hlPageGrid" class="page-grid" style="max-height:360px;overflow-y:auto"></div>
+        <div class="doc-scroll" id="highlightScroll" style="position:relative"></div>
       </div>
 
       <div class="progress-wrap" id="hlProgress" style="display:none">
@@ -2743,7 +2752,7 @@
     <div class="tool-view" id="view-sign">
       <div class="drop-hero" style="margin-bottom:20px">
         <h1 style="font-size:1.6rem">PDF 签名</h1>
-        <p>手绘、打字或上传签名图片，添加到 PDF 任意位置</p>
+        <p>手绘、打字或上传签名图片，拖拽放置到 PDF 任意位置</p>
       </div>
 
       <div class="tool-panel" style="margin-bottom:12px">
@@ -2803,31 +2812,40 @@
       <div class="tool-panel" style="margin-bottom:12px">
         <div class="tool-panel-title">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
-          放置位置
+          放置签名 — 在预览页面上拖拽定位
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
-          <div>
-            <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">添加到第几页</label>
-            <input type="number" id="sigPage" class="range-input" value="1" min="1" style="width:100%;font-family:var(--font-mono)" />
-          </div>
-          <div>
-            <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">签名宽度 (px)</label>
-            <input type="number" id="sigWidth" class="range-input" value="180" min="50" max="400" style="width:100%;font-family:var(--font-mono)" />
-          </div>
-          <div>
-            <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">X 位置（距左）</label>
-            <input type="number" id="sigX" class="range-input" value="72" min="0" style="width:100%;font-family:var(--font-mono)" />
-          </div>
-          <div>
-            <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">Y 位置（距顶部）</label>
-            <input type="number" id="sigY" class="range-input" value="680" min="0" style="width:100%;font-family:var(--font-mono)" />
+        <div style="display:flex;gap:8px;align-items:center;margin-top:10px;margin-bottom:10px">
+          <label style="font-size:0.78rem;color:var(--text-muted)">放置到第</label>
+          <input type="number" id="sigPage" class="range-input" value="1" min="1" style="width:55px;font-family:var(--font-mono)" oninput="updateSigPreviews()" />
+          <label style="font-size:0.78rem;color:var(--text-muted)">页</label>
+          <label style="font-size:0.78rem;color:var(--text-muted);margin-left:12px">宽度</label>
+          <input type="number" id="sigWidth" class="range-input" value="180" min="50" max="400" style="width:55px;font-family:var(--font-mono)" oninput="updateSigPreviews()" />
+          <label style="font-size:0.78rem;color:var(--text-muted)">px</label>
+          <div style="margin-left:auto;display:flex;gap:6px">
+            <button class="btn btn-sm" onclick="setSigPreset('center-bottom')">底部居中</button>
+            <button class="btn btn-sm" onclick="setSigPreset('right-bottom')">右下角</button>
           </div>
         </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
-          <button class="btn btn-sm" onclick="setSigPreset('center-bottom')">底部居中</button>
-          <button class="btn btn-sm" onclick="setSigPreset('right-bottom')">右下角</button>
-          <button class="btn btn-sm" onclick="setSigPreset('left-bottom')">左下角</button>
+        <div class="doc-viewer" id="signViewer">
+          <div class="doc-viewer-toolbar">
+            <div class="page-nav">
+              <button onclick="docNav('sign','prev')" title="上一页">‹</button>
+              <span id="signPageInfo">1 / 1</span>
+              <button onclick="docNav('sign','next')" title="下一页">›</button>
+            </div>
+            <div class="zoom-controls">
+              <button onclick="docZoom('sign','out')" title="缩小">−</button>
+              <span class="zoom-label" id="signZoomLabel">100%</span>
+              <button onclick="docZoom('sign','in')" title="放大">+</button>
+              <button onclick="docZoom('sign','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+            </div>
+            <div style="margin-left:auto;font-size:0.75rem;color:var(--text-muted)">🖱️ 拖拽签名到目标位置</div>
+          </div>
+          <div class="doc-scroll" id="signScroll" style="position:relative"></div>
         </div>
+        <!-- Hidden fields for coords, updated by drag -->
+        <input type="hidden" id="sigX" value="72" />
+        <input type="hidden" id="sigY" value="680" />
       </div>
 
       <div class="progress-wrap" id="sigProgress" style="display:none">
@@ -2851,6 +2869,23 @@
         <p>裁剪 PDF 页面边缘，去除白边或调整边距</p>
       </div>
 
+      <div class="doc-viewer" id="cropViewer">
+        <div class="doc-viewer-toolbar">
+          <div class="page-nav">
+            <button onclick="docNav('crop','prev')" title="上一页">‹</button>
+            <span id="cropPageInfo">1 / 1</span>
+            <button onclick="docNav('crop','next')" title="下一页">›</button>
+          </div>
+          <div class="zoom-controls">
+            <button onclick="docZoom('crop','out')" title="缩小">−</button>
+            <span class="zoom-label" id="cropZoomLabel">100%</span>
+            <button onclick="docZoom('crop','in')" title="放大">+</button>
+            <button onclick="docZoom('crop','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+          </div>
+        </div>
+        <div class="doc-scroll" id="cropScroll" style="position:relative"></div>
+      </div>
+
       <div class="tool-panel" style="margin-bottom:12px">
         <div class="tool-panel-title">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 2v4"/><path d="M18 18v4"/><path d="M2 6h4"/><path d="M18 6h4"/></svg>
@@ -2867,23 +2902,23 @@
       <div class="tool-panel" style="margin-bottom:12px">
         <div class="tool-panel-title">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
-          手动调整（所有选中的页统一设置）
+          手动调整（当前浏览页）
         </div>
         <div class="crop-bar" style="margin-top:10px">
           <span>上
-            <input type="number" id="cropTop" class="range-input" value="0" min="0" max="300" style="width:55px" />
+            <input type="number" id="cropTop" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
             pt
           </span>
           <span>下
-            <input type="number" id="cropBottom" class="range-input" value="0" min="0" max="300" style="width:55px" />
+            <input type="number" id="cropBottom" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
             pt
           </span>
           <span>左
-            <input type="number" id="cropLeft" class="range-input" value="0" min="0" max="300" style="width:55px" />
+            <input type="number" id="cropLeft" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
             pt
           </span>
           <span>右
-            <input type="number" id="cropRight" class="range-input" value="0" min="0" max="300" style="width:55px" />
+            <input type="number" id="cropRight" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
             pt
           </span>
           <span id="cropDims" style="margin-left:auto;color:var(--accent2);font-family:var(--font-mono);font-size:0.75rem">—</span>
@@ -3569,7 +3604,7 @@ async function loadPdfIntoViews(file) {
  await ensurePdfJs();
   const pdf = await pdfjsLib.getDocument({ data: state.pdfBytes.slice() }).promise;
 
-  const tools = ['split', 'rotate', 'delete', 'reorder', 'pdf2img'];
+  const tools = ['split', 'rotate', 'delete', 'reorder', 'pdf2img', 'crop', 'highlight', 'sign'];
   for (const tool of tools) {
     const v = initDocViewer(tool);
     if (!v) continue;
@@ -3621,6 +3656,48 @@ async function loadPdfIntoViews(file) {
         handle.className = 'drag-handle';
         handle.textContent = '☰ 按住拖拽';
         wrap.appendChild(handle);
+      }
+
+      // Crop overlay — shows semi-transparent shaded areas outside crop zone
+      if (tool === 'crop') {
+        const cropOverlay = document.createElement('div');
+        cropOverlay.className = 'crop-overlay';
+        cropOverlay.style.cssText = 'position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:3';
+        wrap.appendChild(cropOverlay);
+      }
+
+      // Highlight overlay — transparent div for drag-selecting annotations
+      if (tool === 'highlight') {
+        const hlOverlay = document.createElement('div');
+        hlOverlay.className = 'hl-page-overlay';
+        hlOverlay.style.cssText = 'position:absolute;top:0;left:0;right:0;bottom:0;cursor:crosshair;z-index:3';
+        hlOverlay.dataset.pageIdx = i;
+        // Selection rectangle (created during drag)
+        const selRect = document.createElement('div');
+        selRect.className = 'hl-sel-rect';
+        selRect.style.cssText = 'position:absolute;border:2px dashed var(--accent);background:rgba(255,235,59,0.25);pointer-events:none;display:none;z-index:4;border-radius:2px';
+        wrap.appendChild(hlOverlay);
+        wrap.appendChild(selRect);
+        // Annotation count badge
+        const hlBadge = document.createElement('div');
+        hlBadge.className = 'hl-badge';
+        hlBadge.style.cssText = 'position:absolute;top:8px;right:8px;background:var(--accent);color:white;border-radius:50%;width:20px;height:20px;display:none;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;z-index:5';
+        wrap.appendChild(hlBadge);
+      }
+
+      // Sign overlay — signature image that can be dragged around
+      if (tool === 'sign') {
+        const signOverlay = document.createElement('div');
+        signOverlay.className = 'sign-page-overlay';
+        signOverlay.style.cssText = 'position:absolute;top:0;left:0;right:0;bottom:0;cursor:default;z-index:3';
+        signOverlay.dataset.pageIdx = i;
+        wrap.appendChild(signOverlay);
+        // Signature placeholder (shown when sigData is set)
+        const sigImg = document.createElement('div');
+        sigImg.className = 'sig-drag-img';
+        sigImg.style.cssText = 'position:absolute;display:none;cursor:move;z-index:6;border:2px dashed var(--accent2);border-radius:4px;background:rgba(232,184,109,0.1);padding:4px';
+        sigImg.dataset.pageIdx = i;
+        wrap.appendChild(sigImg);
       }
 
       // Canvas
@@ -4185,6 +4262,278 @@ function setupCardClicks() {
 }
 
 // ============================================================
+// CROP OVERLAY — draw shaded margin on current page
+// ============================================================
+function updateCropOverlay() {
+  const v = docViewers['crop'];
+  if (!v || !state.pdfDoc) return;
+  const top = parseInt(document.getElementById('cropTop').value) || 0;
+  const bottom = parseInt(document.getElementById('cropBottom').value) || 0;
+  const left = parseInt(document.getElementById('cropLeft').value) || 0;
+  const right = parseInt(document.getElementById('cropRight').value) || 0;
+  const dims = document.getElementById('cropDims');
+
+  // Update each visible page's overlay
+  v.pages.forEach(wrap => {
+    const overlay = wrap.querySelector('.crop-overlay');
+    if (!overlay) return;
+    const canvas = wrap.querySelector('canvas');
+    if (!canvas) return;
+    const canvasW = canvas.clientWidth;
+    const canvasH = canvas.clientHeight;
+
+    // Convert PDF points to pixel ratio
+    const idx = parseInt(wrap.dataset.page);
+    const page = state.pdfDoc.getPage(idx);
+    if (!page) return;
+    const { width: pw, height: ph } = page.getSize();
+
+    const scaleX = canvasW / pw;
+    const scaleY = canvasH / ph;
+
+    const lPx = left * scaleX;
+    const rPx = right * scaleX;
+    const tPx = top * scaleY;
+    const bPx = bottom * scaleY;
+
+    // Draw shaded overlay using CSS box-shadow or clip-path
+    overlay.style.clipPath = `polygon(
+      0% 0%, 100% 0%, 100% 100%, 0% 100%,
+      0% 100%,
+      0 ${tPx}px, ${lPx}px ${tPx}px, ${lPx}px ${canvasH - bPx}px, ${canvasW - rPx}px ${canvasH - bPx}px, ${canvasW - rPx}px ${tPx}px, 0 ${tPx}px,
+      0 100%
+    )`;
+    overlay.style.background = 'rgba(0,0,0,0.25)';
+
+    if (dims && idx === (v.currentPage - 1)) {
+      const cropW = Math.max(0, pw - left - right);
+      const cropH = Math.max(0, ph - top - bottom);
+      dims.textContent = cropW.toFixed(0) + ' × ' + cropH.toFixed(0) + ' pt';
+    }
+  });
+
+  document.getElementById('btn-crop').disabled = false;
+}
+
+// ============================================================
+// HIGHLIGHT DRAG-SELECT on doc viewer pages
+// ============================================================
+function setupHighlightOverlays() {
+  const v = docViewers['highlight'];
+  if (!v) return;
+  const scroll = v.scrollEl;
+
+  scroll.addEventListener('pointerdown', (e) => {
+    const overlay = e.target.closest('.hl-page-overlay');
+    if (!overlay) return;
+    e.preventDefault();
+    const wrap = overlay.closest('.doc-page-wrap');
+    const selRect = wrap.querySelector('.hl-sel-rect');
+    const canvas = wrap.querySelector('canvas');
+    if (!selRect || !canvas) return;
+
+    const pageIdx = parseInt(overlay.dataset.pageIdx);
+    const overlayRect = overlay.getBoundingClientRect();
+    const startX = e.clientX - overlayRect.left;
+    const startY = e.clientY - overlayRect.top;
+
+    selRect.style.display = 'block';
+    selRect.style.left = startX + 'px';
+    selRect.style.top = startY + 'px';
+    selRect.style.width = '0';
+    selRect.style.height = '0';
+
+    let moved = false;
+    const onMove = (ev) => {
+      moved = true;
+      const cx = ev.clientX - overlayRect.left;
+      const cy = ev.clientY - overlayRect.top;
+      const x = Math.min(startX, cx);
+      const y = Math.min(startY, cy);
+      const w = Math.abs(cx - startX);
+      const h = Math.abs(cy - startY);
+      selRect.style.left = x + 'px';
+      selRect.style.top = y + 'px';
+      selRect.style.width = w + 'px';
+      selRect.style.height = h + 'px';
+    };
+
+    const onUp = (ev) => {
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+      selRect.style.display = 'none';
+
+      if (!moved) return;
+      const cx = ev.clientX - overlayRect.left;
+      const cy = ev.clientY - overlayRect.top;
+      const w = Math.abs(cx - startX);
+      const h = Math.abs(cy - startY);
+      if (w < 4 || h < 4) return;
+
+      // Convert pixel coords to PDF points
+      const page = state.pdfDoc.getPage(pageIdx);
+      if (!page) return;
+      const { width: pw, height: ph } = page.getSize();
+      const scaleX = canvas.clientWidth / pw;
+      const scaleY = canvas.clientHeight / ph;
+
+      const x0 = Math.min(startX, cx) / scaleX;
+      const y0 = ph - Math.max(startY, cy) / scaleY;
+      const x1 = Math.max(startX, cx) / scaleX;
+      const y1 = ph - Math.min(startY, cy) / scaleY;
+
+      if (!hlAnnotations.has(pageIdx)) hlAnnotations.set(pageIdx, []);
+      hlAnnotations.get(pageIdx).push({ x0, y0, x1, y1, color: selectedHlColor, type: selectedHlType });
+      showToast('✅ 标注已添加（第' + (pageIdx + 1) + '页）');
+      updateHighlightBadges();
+      document.getElementById('btn-highlight').disabled = false;
+    };
+
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+  });
+}
+
+function updateHighlightBadges() {
+  const v = docViewers['highlight'];
+  if (!v) return;
+  v.pages.forEach(wrap => {
+    const idx = parseInt(wrap.dataset.page);
+    const badge = wrap.querySelector('.hl-badge');
+    if (!badge) return;
+    const count = (hlAnnotations.get(idx) || []).length;
+    if (count > 0) {
+      badge.style.display = 'flex';
+      badge.textContent = count;
+    } else {
+      badge.style.display = 'none';
+    }
+    // Draw annotation overlays on canvas
+    drawHighlightOnCanvas(wrap, idx);
+  });
+}
+
+function drawHighlightOnCanvas(wrap, pageIdx) {
+  const annotations = hlAnnotations.get(pageIdx) || [];
+  if (annotations.length === 0) return;
+  const canvas = wrap.querySelector('canvas');
+  if (!canvas || !canvas._rendered) return;
+  const ctx = canvas.getContext('2d');
+  const page = state.pdfDoc.getPage(pageIdx);
+  if (!page) return;
+  const { width: pw, height: ph } = page.getSize();
+  const scaleX = canvas.width / pw;
+  const scaleY = canvas.height / ph;
+
+  annotations.forEach(a => {
+    const x = a.x0 * scaleX;
+    const y = canvas.height - a.y1 * scaleY;
+    const w = (a.x1 - a.x0) * scaleX;
+    const h = (a.y1 - a.y0) * scaleY;
+    // Parse color
+    const r = parseInt(a.color.slice(1, 3), 16);
+    const g = parseInt(a.color.slice(3, 5), 16);
+    const b = parseInt(a.color.slice(5, 7), 16);
+    ctx.fillStyle = `rgba(${r},${g},${b},0.35)`;
+    ctx.fillRect(x, y, w, h);
+  });
+}
+
+// ============================================================
+// SIGNATURE DRAG-PLACE on doc viewer pages
+// ============================================================
+let sigDragState = null;
+
+function setupSignOverlays() {
+  const v = docViewers['sign'];
+  if (!v) return;
+  const scroll = v.scrollEl;
+
+  scroll.addEventListener('pointerdown', (e) => {
+    const sigImg = e.target.closest('.sig-drag-img');
+    if (!sigImg) return;
+    e.preventDefault();
+    const wrap = sigImg.closest('.doc-page-wrap');
+    const rect = sigImg.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+
+    sigDragState = { sigImg, wrap, offsetX, offsetY };
+    sigImg.setPointerCapture(e.pointerId);
+  });
+
+  scroll.addEventListener('pointermove', (e) => {
+    if (!sigDragState) return;
+    const { sigImg, wrap, offsetX, offsetY } = sigDragState;
+    const wrapRect = wrap.getBoundingClientRect();
+    const x = e.clientX - wrapRect.left - offsetX;
+    const y = e.clientY - wrapRect.top - offsetY;
+    sigImg.style.left = Math.max(0, x) + 'px';
+    sigImg.style.top = Math.max(0, y) + 'px';
+  });
+
+  const endSigDrag = () => {
+    if (!sigDragState) return;
+    const { sigImg, wrap } = sigDragState;
+    // Update hidden X/Y fields
+    const canvas = wrap.querySelector('canvas');
+    const pageIdx = parseInt(wrap.dataset.page);
+    const page = state.pdfDoc ? state.pdfDoc.getPage(pageIdx) : null;
+    if (canvas && page) {
+      const { width: pw, height: ph } = page.getSize();
+      const scaleX = canvas.clientWidth / pw;
+      const scaleY = canvas.clientHeight / ph;
+      const sigLeft = parseInt(sigImg.style.left) || 0;
+      const sigTop = parseInt(sigImg.style.top) || 0;
+      document.getElementById('sigX').value = Math.round(sigLeft / scaleX);
+      document.getElementById('sigY').value = Math.round((canvas.clientHeight - sigTop - sigImg.clientHeight) / scaleY);
+    }
+    sigDragState = null;
+  };
+
+  scroll.addEventListener('pointerup', endSigDrag);
+  scroll.addEventListener('pointercancel', endSigDrag);
+}
+
+function updateSigPreviews() {
+  const v = docViewers['sign'];
+  if (!v || !sigData) return;
+  const targetPage = parseInt(document.getElementById('sigPage').value || '1') - 1;
+  const sigW = parseInt(document.getElementById('sigWidth').value || '180');
+
+  v.pages.forEach((wrap, i) => {
+    const sigImg = wrap.querySelector('.sig-drag-img');
+    if (!sigImg) return;
+    if (i === targetPage && sigData) {
+      sigImg.style.display = 'block';
+      sigImg.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = sigData;
+      img.style.width = sigW + 'px';
+      img.style.height = 'auto';
+      img.style.pointerEvents = 'none';
+      img.draggable = false;
+      sigImg.appendChild(img);
+
+      // Position at current X/Y or default bottom
+      const canvas = wrap.querySelector('canvas');
+      const page = state.pdfDoc ? state.pdfDoc.getPage(i) : null;
+      if (canvas && page) {
+        const { width: pw, height: ph } = page.getSize();
+        const scaleX = canvas.clientWidth / pw;
+        const scaleY = canvas.clientHeight / ph;
+        const xPdf = parseInt(document.getElementById('sigX').value) || 72;
+        const yPdf = parseInt(document.getElementById('sigY').value) || 680;
+        sigImg.style.left = Math.round(xPdf * scaleX) + 'px';
+        sigImg.style.top = Math.round((canvas.clientHeight - yPdf * scaleY)) + 'px';
+      }
+    } else {
+      sigImg.style.display = 'none';
+    }
+  });
+}
+
+// ============================================================
 // TOOL NAVIGATION
 // ============================================================
 let wfState = { files: [], steps: [], results: null };
@@ -4224,9 +4573,18 @@ window.showTool = function(toolName) {
   const wfBtn = document.getElementById('btn-runworkflow');
   if (wfBtn) wfBtn.disabled = !(wfState.files && wfState.files.length > 0);
   if (toolName === 'tomarkdown' && state.pdfDoc && !extractedMarkdown) doMarkdownExtract();
-  if (toolName === 'highlight' && state.pdfDoc) renderHighlightGrid();
-  if (toolName === 'sign' && state.pdfDoc) initSigCanvas();
-  if (toolName === 'crop' && state.pdfDoc) updateCropDims();
+  if (toolName === 'highlight' && state.pdfDoc) {
+    document.getElementById('hlToolbar').style.display = 'flex';
+    updateHighlightBadges();
+  }
+  if (toolName === 'sign' && state.pdfDoc) {
+    initSigCanvas();
+    updateSigPreviews();
+  }
+  if (toolName === 'crop' && state.pdfDoc) {
+    updateCropDims();
+    updateCropOverlay();
+  }
   if (toolName === 'watermark') {
     (async () => {
       hookWmInputs();
@@ -4347,7 +4705,6 @@ function resetAll() {
   if (document.getElementById('cmpSummaryPanel')) document.getElementById('cmpSummaryPanel').style.display = 'none';
   clearWorkflow();
   document.getElementById('hlToolbar').style.display = 'none';
-  document.getElementById('hlPageGrid').innerHTML = '';
   if (window.hlAnnotations) hlAnnotations.clear();
   if (window.sigData) sigData = null;
   clearSignature();
@@ -4432,6 +4789,8 @@ mergeFileInput.addEventListener('change', async () => {
 // Init
 setupCardClicks();
 setupReorderDrag();
+setupHighlightOverlays();
+setupSignOverlays();
 setupImg2Pdf();
 setupWatermark();
 
@@ -5774,81 +6133,10 @@ function clearHighlights() {
 }
 
 async function renderHighlightGrid() {
-  const grid = document.getElementById('hlPageGrid');
   const toolbar = document.getElementById('hlToolbar');
-  if (!grid || !state.pdfDoc) return;
+  if (!state.pdfDoc) return;
   toolbar.style.display = 'flex';
-  grid.innerHTML = '';
-  const pages = state.pdfDoc.getPages();
-  for (let idx = 0; idx < pages.length; idx++) {
-    const page = pages[idx];
-    const { width, height } = page.getSize();
-    const card = document.createElement('div');
-    card.className = 'page-card';
-    card.style.cssText = 'position:relative;cursor:pointer;border-radius:6px;overflow:hidden;border:2px solid transparent;transition:all 0.2s';
-    card.title = '点击进入第 ' + (idx+1) + ' 页标注模式';
-    const canvas = document.createElement('canvas');
-    canvas.width = 100; canvas.height = Math.round(100 * height / width);
-    const label = document.createElement('div');
-    label.className = 'page-label';
-    label.style.cssText = 'position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.55);color:white;text-align:center;font-size:0.62rem;padding:2px 4px';
-    label.textContent = '第 ' + (idx+1) + ' 页';
-    const count = (hlAnnotations.get(idx) || []).length;
-    if (count > 0) {
-      const badge = document.createElement('span');
-      badge.style.cssText = 'position:absolute;top:3px;right:3px;background:var(--accent);color:white;border-radius:50%;width:17px;height:17px;display:flex;align-items:center;justify-content:center;font-size:0.58rem;font-weight:700';
-      badge.textContent = count;
-      card.appendChild(badge);
-    }
-    // Render thumbnail using pdf-lib's embedPageThumbnail helper
-    PDFLib.embedPageThumbnail(page, canvas, { scale: 100/width }).catch(err => console.error('renderPageThumbnail error:', err));
-    card.appendChild(canvas);
-    card.appendChild(label);
-    card.addEventListener('click', () => enterHlPage(idx, canvas, page, width, height));
-    grid.appendChild(card);
-  }
-}
-
-async function enterHlPage(pageIdx, thumbCanvas, pdfPage, pageW, pageH) {
-  const card = thumbCanvas.parentElement;
-  card.style.borderColor = 'var(--accent)';
-  card.style.transform = 'scale(1.06)';
-  card.onclick = null;
-  const overlay = document.createElement('div');
-  overlay.style.cssText = 'position:absolute;top:0;left:0;right:0;bottom:0;cursor:crosshair;z-index:10';
-  let startX=0,startY=0,curX=0,curY=0,drawing=false;
-  const selDiv = document.createElement('div');
-  selDiv.style.cssText = 'position:absolute;border:2px dashed var(--accent);background:rgba(255,235,59,0.25);pointer-events:none;display:none;z-index:11;border-radius:2px';
-  overlay.addEventListener('mousedown', e => {
-    const r = overlay.getBoundingClientRect();
-    startX=e.clientX-r.left; startY=e.clientY-r.top; drawing=true;
-    selDiv.style.display='block';
-  });
-  overlay.addEventListener('mousemove', e => {
-    if (!drawing) return;
-    const r = overlay.getBoundingClientRect();
-    curX=e.clientX-r.left; curY=e.clientY-r.top;
-    const x=Math.min(startX,curX),y=Math.min(startY,curY);
-    selDiv.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:${Math.abs(curX-startX)}px;height:${Math.abs(curY-startY)}px;border:2px dashed var(--accent);background:rgba(255,235,59,0.25);pointer-events:none;z-index:11`;
-  });
-  overlay.addEventListener('mouseup', e => {
-    if (!drawing) return;
-    drawing=false;
-    const r = overlay.getBoundingClientRect();
-    const ex=e.clientX-r.left, ey=e.clientY-r.top;
-    const x0=Math.min(startX,ex),y0=Math.min(startY,ey),w=Math.abs(ex-startX),h=Math.abs(ey-startY);
-    selDiv.style.display='none';
-    if (w<4||h<4) return;
-    // Convert to PDF point coords
-    const px0=(x0/thumbCanvas.width)*pageW, py0=pageH-(y0/thumbCanvas.height)*pageH;
-    const px1=((x0+w)/thumbCanvas.width)*pageW, py1=pageH-((y0+h)/thumbCanvas.height)*pageH;
-    if (!hlAnnotations.has(pageIdx)) hlAnnotations.set(pageIdx,[]);
-    hlAnnotations.get(pageIdx).push({x0:px0,y0:py0,x1:px1,y1:py1,color:selectedHlColor,type:selectedHlType});
-    showToast('✅ 标注已添加（第'+(pageIdx+1)+'页）');
-    renderHighlightGrid();
-  });
-  card.appendChild(overlay);
-  card.appendChild(selDiv);
+  updateHighlightBadges();
 }
 
 async function doHighlight() {
@@ -5967,6 +6255,7 @@ function saveSigFromCanvas() {
   const tmp=document.createElement('canvas'); tmp.width=r-l; tmp.height=b-t;
   tmp.getContext('2d').putImageData(cropped,0,0);
   sigData = tmp.toDataURL('image/png');
+  updateSigPreviews();
 }
 
 function clearSignature() {
@@ -5974,6 +6263,7 @@ function clearSignature() {
   if (c1&&sigCtx){ sigCtx.clearRect(0,0,c1.width,c1.height); }
   if (c2){ c2.getContext('2d').clearRect(0,0,c2.width,c2.height); }
   sigData=null;
+  updateSigPreviews();
   const hint=document.getElementById('sigHint'); if(hint) hint.style.display='block';
   document.getElementById('sigUploadImg').style.display='none';
 }
@@ -5989,6 +6279,7 @@ function renderTypeSignature() {
   ctx.fillStyle='#1c1917'; ctx.textBaseline='middle';
   ctx.fillText(name,12,canvas.height/2);
   sigData=canvas.toDataURL('image/png');
+  updateSigPreviews();
 }
 
 function loadSigImage(input) {
@@ -5998,6 +6289,7 @@ function loadSigImage(input) {
     const img=document.getElementById('sigUploadImg');
     img.src=e.target.result; img.style.display='block';
     sigData=e.target.result;
+    updateSigPreviews();
   };
   reader.readAsDataURL(file);
 }
