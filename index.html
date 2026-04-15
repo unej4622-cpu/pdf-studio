@@ -3365,6 +3365,7 @@ const docViewers = {};   // toolName -> { zoom, scrollEl, pages[], currentPage }
 const ZOOM_LEVELS = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
 
 function initDocViewer(toolName) {
+  if (docViewers[toolName]) return docViewers[toolName];
   const scroll = document.getElementById(toolName + 'Scroll');
   if (!scroll) return null;
   docViewers[toolName] = { zoom: 1.0, scrollEl: scroll, pages: [], currentPage: 1 };
