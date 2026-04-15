@@ -4320,80 +4320,6 @@ function updateCropOverlay() {
 // ============================================================
 // Replaced by _ensureHlOverlays (registered once via closure flag)
 function setupHighlightOverlays() { _ensureHlOverlays(); }
-  const v = docViewers['highlight'];
-  if (!v) return;
-  const scroll = v.scrollEl;
-
-  scroll.addEventListener('pointerdown', (e) => {
-    const overlay = e.target.closest('.hl-page-overlay');
-    if (!overlay) return;
-    e.preventDefault();
-    const wrap = overlay.closest('.doc-page-wrap');
-    const selRect = wrap.querySelector('.hl-sel-rect');
-    const canvas = wrap.querySelector('canvas');
-    if (!selRect || !canvas) return;
-
-    const pageIdx = parseInt(overlay.dataset.pageIdx);
-    const overlayRect = overlay.getBoundingClientRect();
-    const startX = e.clientX - overlayRect.left;
-    const startY = e.clientY - overlayRect.top;
-
-    selRect.style.display = 'block';
-    selRect.style.left = startX + 'px';
-    selRect.style.top = startY + 'px';
-    selRect.style.width = '0';
-    selRect.style.height = '0';
-
-    let moved = false;
-    const onMove = (ev) => {
-      moved = true;
-      const cx = ev.clientX - overlayRect.left;
-      const cy = ev.clientY - overlayRect.top;
-      const x = Math.min(startX, cx);
-      const y = Math.min(startY, cy);
-      const w = Math.abs(cx - startX);
-      const h = Math.abs(cy - startY);
-      selRect.style.left = x + 'px';
-      selRect.style.top = y + 'px';
-      selRect.style.width = w + 'px';
-      selRect.style.height = h + 'px';
-    };
-
-    const onUp = (ev) => {
-      document.removeEventListener('pointermove', onMove);
-      document.removeEventListener('pointerup', onUp);
-      selRect.style.display = 'none';
-
-      if (!moved) return;
-      const cx = ev.clientX - overlayRect.left;
-      const cy = ev.clientY - overlayRect.top;
-      const w = Math.abs(cx - startX);
-      const h = Math.abs(cy - startY);
-      if (w < 4 || h < 4) return;
-
-      // Convert pixel coords to PDF points
-      const page = state.pdfDoc.getPage(pageIdx);
-      if (!page) return;
-      const { width: pw, height: ph } = page.getSize();
-      const scaleX = canvas.clientWidth / pw;
-      const scaleY = canvas.clientHeight / ph;
-
-      const x0 = Math.min(startX, cx) / scaleX;
-      const y0 = ph - Math.max(startY, cy) / scaleY;
-      const x1 = Math.max(startX, cx) / scaleX;
-      const y1 = ph - Math.min(startY, cy) / scaleY;
-
-      if (!hlAnnotations.has(pageIdx)) hlAnnotations.set(pageIdx, []);
-      hlAnnotations.get(pageIdx).push({ x0, y0, x1, y1, color: selectedHlColor, type: selectedHlType });
-      showToast('✅ 标注已添加（第' + (pageIdx + 1) + '页）');
-      updateHighlightBadges();
-      document.getElementById('btn-highlight').disabled = false;
-    };
-
-    document.addEventListener('pointermove', onMove);
-    document.addEventListener('pointerup', onUp);
-  });
-}
 
 function updateHighlightBadges() {
   const v = docViewers['highlight'];
@@ -4447,56 +4373,6 @@ let sigDragState = null;
 
 // Replaced by _ensureSigOverlays
 function setupSignOverlays() { _ensureSigOverlays(); }
-  const v = docViewers['sign'];
-  if (!v) return;
-  const scroll = v.scrollEl;
-
-  scroll.addEventListener('pointerdown', (e) => {
-    const sigImg = e.target.closest('.sig-drag-img');
-    if (!sigImg) return;
-    e.preventDefault();
-    const wrap = sigImg.closest('.doc-page-wrap');
-    const rect = sigImg.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-
-    sigDragState = { sigImg, wrap, offsetX, offsetY };
-    sigImg.setPointerCapture(e.pointerId);
-  });
-
-  scroll.addEventListener('pointermove', (e) => {
-    if (!sigDragState) return;
-    const { sigImg, wrap, offsetX, offsetY } = sigDragState;
-    const wrapRect = wrap.getBoundingClientRect();
-    const x = e.clientX - wrapRect.left - offsetX;
-    const y = e.clientY - wrapRect.top - offsetY;
-    sigImg.style.left = Math.max(0, x) + 'px';
-    sigImg.style.top = Math.max(0, y) + 'px';
-  });
-
-  const endSigDrag = () => {
-    if (!sigDragState) return;
-    const { sigImg, wrap } = sigDragState;
-    // Update hidden X/Y fields
-    const canvas = wrap.querySelector('canvas');
-    const pageIdx = parseInt(wrap.dataset.page);
-    const page = state.pdfDoc ? state.pdfDoc.getPage(pageIdx) : null;
-    if (canvas && page) {
-      const { width: pw, height: ph } = page.getSize();
-      const scaleX = canvas.clientWidth / pw;
-      const scaleY = canvas.clientHeight / ph;
-      const sigLeft = parseInt(sigImg.style.left) || 0;
-      const sigTop = parseInt(sigImg.style.top) || 0;
-      document.getElementById('sigX').value = Math.round(sigLeft / scaleX);
-      document.getElementById('sigY').value = Math.round((canvas.clientHeight - sigTop - sigImg.clientHeight) / scaleY);
-    }
-    sigDragState = null;
-  };
-
-  scroll.addEventListener('pointerup', endSigDrag);
-  scroll.addEventListener('pointercancel', endSigDrag);
-}
-
 function updateSigPreviews() {
   const v = docViewers['sign'];
   if (!v || !sigData) return;
