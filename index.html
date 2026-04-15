@@ -795,7 +795,7 @@
     .doc-scroll {
       overflow: auto;
       flex: 1 1 0;
-      min-height: 0;
+      min-height: 200px;
       padding: 16px;
       display: flex;
       flex-direction: column;
@@ -1474,6 +1474,7 @@
       max-width: 1400px;
       margin: 0 auto;
       min-height: calc(100vh - 80px);
+      align-items: stretch;
       box-sizing: border-box;
     }
     .tool-view.active { display: flex; }
@@ -1488,12 +1489,12 @@
     }
 
     .tool-view-right {
-      flex: 0 0 280px;
+      flex: 0 0 300px;
       display: flex;
       flex-direction: column;
       gap: 12px;
       position: sticky;
-      top: 80px;
+      top: 64px;
       max-height: calc(100vh - 100px);
       overflow-y: auto;
       scrollbar-width: thin;
@@ -1502,6 +1503,18 @@
     .tool-view-right::-webkit-scrollbar { width: 4px; }
     .tool-view-right::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
     .tool-view-right::-webkit-scrollbar-track { background: transparent; }
+
+    .tool-view-right .action-buttons {
+      flex-direction: column;
+      gap: 8px;
+    }
+    .tool-view-right .action-buttons .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .tool-view-right .progress-wrap {
+      margin: 0;
+    }
 
     /* ===== EMPTY STATE ===== */
     .empty-state {
@@ -1941,49 +1954,49 @@
     <div class="tool-view" id="view-split">
       <div class="tool-view-left">
       <div class="drop-hero">
-              <h1 style="font-size:1.6rem">拆分 PDF</h1>
-              <p>按页面范围拆分，或将每一页单独导出</p>
-            </div>
+      <h1 style="font-size:1.6rem">拆分 PDF</h1>
+      <p>按页面范围拆分，或将每一页单独导出</p>
+      </div>
       <div class="doc-viewer" id="splitViewer">
-              <div class="doc-viewer-toolbar">
-                <div class="page-nav">
-                  <button onclick="docNav('split','prev')" title="上一页">‹</button>
-                  <span id="splitPageInfo">1 / 1</span>
-                  <button onclick="docNav('split','next')" title="下一页">›</button>
-                </div>
-                <div class="zoom-controls">
-                  <button onclick="docZoom('split','out')" title="缩小">−</button>
-                  <span class="zoom-label" id="splitZoomLabel">100%</span>
-                  <button onclick="docZoom('split','in')" title="放大">+</button>
-                  <button onclick="docZoom('split','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
-                </div>
-              </div>
-              <div class="doc-scroll" id="splitScroll"></div>
-            </div>
+      <div class="doc-viewer-toolbar">
+      <div class="page-nav">
+      <button onclick="docNav('split','prev')" title="上一页">‹</button>
+      <span id="splitPageInfo">1 / 1</span>
+      <button onclick="docNav('split','next')" title="下一页">›</button>
+      </div>
+      <div class="zoom-controls">
+      <button onclick="docZoom('split','out')" title="缩小">−</button>
+      <span class="zoom-label" id="splitZoomLabel">100%</span>
+      <button onclick="docZoom('split','in')" title="放大">+</button>
+      <button onclick="docZoom('split','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+      </div>
+      </div>
+      <div class="doc-scroll" id="splitScroll"></div>
+      </div>
       </div>
       <div class="tool-view-right">
         <div class="tool-panel">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.5A3.5 3.5 0 0 0 8.5 10H3"/><path d="M21 15v5a2 2 0 0 1-2 2h-5"/></svg>
-                  指定拆分范围
-                </div>
-                <p class="range-hint">
-                  输入示例：<code>1-3, 5, 7-9</code> 表示提取第1至3页、第5页、第7至9页。
-                  留空则将每一页拆分为单独文件。
-                </p>
-                <input type="text" class="range-input" id="splitRangeInput" placeholder="输入页面范围，如 1-3, 5, 7-9（可选）" />
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.5A3.5 3.5 0 0 0 8.5 10H3"/><path d="M21 15v5a2 2 0 0 1-2 2h-5"/></svg>
+        指定拆分范围
+        </div>
+        <p class="range-hint">
+        输入示例：<code>1-3, 5, 7-9</code> 表示提取第1至3页、第5页、第7至9页。
+        留空则将每一页拆分为单独文件。
+        </p>
+        <input type="text" class="range-input" id="splitRangeInput" placeholder="输入页面范围，如 1-3, 5, 7-9（可选）" />
+        </div>
         <div class="progress-wrap" id="splitProgress" style="display:none">
-                <div class="progress-bar-bg"><div class="progress-bar" id="splitProgressBar"></div></div>
-                <div class="progress-text" id="splitProgressText">正在处理…</div>
-              </div>
+        <div class="progress-bar-bg"><div class="progress-bar" id="splitProgressBar"></div></div>
+        <div class="progress-text" id="splitProgressText">正在处理…</div>
+        </div>
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetAll()">重新开始</button>
-                <button class="btn btn-primary" onclick="doSplit()" id="btn-split" disabled>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  拆分并下载 ZIP
-                </button>
-              </div>
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doSplit()" id="btn-split" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        拆分并下载 ZIP
+        </button>
+        </div>
       </div>
     </div>
 
@@ -1991,53 +2004,53 @@
     <div class="tool-view" id="view-rotate">
       <div class="tool-view-left">
       <div class="drop-hero">
-              <h1 style="font-size:1.6rem">旋转页面</h1>
-              <p>选中页面后，选择旋转角度</p>
-            </div>
+      <h1 style="font-size:1.6rem">旋转页面</h1>
+      <p>选中页面后，选择旋转角度</p>
+      </div>
       <div class="doc-viewer" id="rotateViewer">
-              <div class="doc-viewer-toolbar">
-                <div class="page-nav">
-                  <button onclick="docNav('rotate','prev')" title="上一页">‹</button>
-                  <span id="rotatePageInfo">1 / 1</span>
-                  <button onclick="docNav('rotate','next')" title="下一页">›</button>
-                </div>
-                <div class="zoom-controls">
-                  <button onclick="docZoom('rotate','out')" title="缩小">−</button>
-                  <span class="zoom-label" id="rotateZoomLabel">100%</span>
-                  <button onclick="docZoom('rotate','in')" title="放大">+</button>
-                  <button onclick="docZoom('rotate','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
-                </div>
-              </div>
-              <div class="doc-scroll" id="rotateScroll"></div>
-            </div>
+      <div class="doc-viewer-toolbar">
+      <div class="page-nav">
+      <button onclick="docNav('rotate','prev')" title="上一页">‹</button>
+      <span id="rotatePageInfo">1 / 1</span>
+      <button onclick="docNav('rotate','next')" title="下一页">›</button>
+      </div>
+      <div class="zoom-controls">
+      <button onclick="docZoom('rotate','out')" title="缩小">−</button>
+      <span class="zoom-label" id="rotateZoomLabel">100%</span>
+      <button onclick="docZoom('rotate','in')" title="放大">+</button>
+      <button onclick="docZoom('rotate','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+      </div>
+      </div>
+      <div class="doc-scroll" id="rotateScroll"></div>
+      </div>
       </div>
       <div class="tool-view-right">
         <div class="selection-bar" id="rotateSelBar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                已选 <strong id="rotateSelCount">0</strong> 页
-                <button class="btn btn-sm" onclick="clearRotateSelection()">清除选择</button>
-              </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        已选 <strong id="rotateSelCount">0</strong> 页
+        <button class="btn btn-sm" onclick="clearRotateSelection()">清除选择</button>
+        </div>
         <div class="tool-panel">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-                  旋转角度
-                </div>
-                <div class="rotate-controls">
-                  <button class="rotate-btn" onclick="doRotate(90)" id="btn-rot90">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-                    90°
-                  </button>
-                  <button class="rotate-btn" onclick="doRotate(180)" id="btn-rot180">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 3v6h6"/></svg>
-                    180°
-                  </button>
-                  <button class="rotate-btn" onclick="doRotate(270)" id="btn-rot270">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                    270°
-                  </button>
-                  <button class="btn btn-sm" onclick="resetAll()" style="margin-left:auto">重新开始</button>
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+        旋转角度
+        </div>
+        <div class="rotate-controls">
+        <button class="rotate-btn" onclick="doRotate(90)" id="btn-rot90">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+        90°
+        </button>
+        <button class="rotate-btn" onclick="doRotate(180)" id="btn-rot180">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 3v6h6"/></svg>
+        180°
+        </button>
+        <button class="rotate-btn" onclick="doRotate(270)" id="btn-rot270">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        270°
+        </button>
+        <button class="btn btn-sm" onclick="resetAll()" style="margin-left:auto">重新开始</button>
+        </div>
+        </div>
       </div>
     </div>
 
@@ -2045,43 +2058,43 @@
     <div class="tool-view" id="view-delete">
       <div class="tool-view-left">
       <div class="drop-hero">
-              <h1 style="font-size:1.6rem">删除页面</h1>
-              <p>点击页面卡片选中（红色边框），然后确认删除</p>
-            </div>
+      <h1 style="font-size:1.6rem">删除页面</h1>
+      <p>点击页面卡片选中（红色边框），然后确认删除</p>
+      </div>
       <div class="doc-viewer" id="deleteViewer">
-              <div class="doc-viewer-toolbar">
-                <div class="page-nav">
-                  <button onclick="docNav('delete','prev')" title="上一页">‹</button>
-                  <span id="deletePageInfo">1 / 1</span>
-                  <button onclick="docNav('delete','next')" title="下一页">›</button>
-                </div>
-                <div class="zoom-controls">
-                  <button onclick="docZoom('delete','out')" title="缩小">−</button>
-                  <span class="zoom-label" id="deleteZoomLabel">100%</span>
-                  <button onclick="docZoom('delete','in')" title="放大">+</button>
-                  <button onclick="docZoom('delete','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
-                </div>
-              </div>
-              <div class="doc-scroll" id="deleteScroll"></div>
-            </div>
+      <div class="doc-viewer-toolbar">
+      <div class="page-nav">
+      <button onclick="docNav('delete','prev')" title="上一页">‹</button>
+      <span id="deletePageInfo">1 / 1</span>
+      <button onclick="docNav('delete','next')" title="下一页">›</button>
+      </div>
+      <div class="zoom-controls">
+      <button onclick="docZoom('delete','out')" title="缩小">−</button>
+      <span class="zoom-label" id="deleteZoomLabel">100%</span>
+      <button onclick="docZoom('delete','in')" title="放大">+</button>
+      <button onclick="docZoom('delete','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+      </div>
+      </div>
+      <div class="doc-scroll" id="deleteScroll"></div>
+      </div>
       </div>
       <div class="tool-view-right">
         <div class="selection-bar" id="deleteSelBar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>
-                已选 <strong id="deleteSelCount">0</strong> 页待删除
-                <button class="btn btn-sm" onclick="clearDeleteSelection()">取消选择</button>
-              </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>
+        已选 <strong id="deleteSelCount">0</strong> 页待删除
+        <button class="btn btn-sm" onclick="clearDeleteSelection()">取消选择</button>
+        </div>
         <div class="progress-wrap" id="deleteProgress" style="display:none">
-                <div class="progress-bar-bg"><div class="progress-bar" id="deleteProgressBar"></div></div>
-                <div class="progress-text" id="deleteProgressText">正在处理…</div>
-              </div>
+        <div class="progress-bar-bg"><div class="progress-bar" id="deleteProgressBar"></div></div>
+        <div class="progress-text" id="deleteProgressText">正在处理…</div>
+        </div>
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetAll()">重新开始</button>
-                <button class="btn btn-primary btn-danger" id="btn-delete" onclick="doDelete()" disabled style="background:#dc2626;border-color:#dc2626">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>
-                  确认删除并下载
-                </button>
-              </div>
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary btn-danger" id="btn-delete" onclick="doDelete()" disabled style="background:#dc2626;border-color:#dc2626">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>
+        确认删除并下载
+        </button>
+        </div>
       </div>
     </div>
 
@@ -2089,34 +2102,34 @@
     <div class="tool-view" id="view-reorder">
       <div class="tool-view-left">
       <div class="drop-hero">
-              <h1 style="font-size:1.6rem">重排页面顺序</h1>
-              <p>拖拽页面卡片调整顺序，满意后点击下载</p>
-            </div>
+      <h1 style="font-size:1.6rem">重排页面顺序</h1>
+      <p>拖拽页面卡片调整顺序，满意后点击下载</p>
+      </div>
       <div class="doc-viewer" id="reorderViewer">
-              <div class="doc-viewer-toolbar">
-                <div class="page-nav">
-                  <button onclick="docNav('reorder','prev')" title="上一页">‹</button>
-                  <span id="reorderPageInfo">1 / 1</span>
-                  <button onclick="docNav('reorder','next')" title="下一页">›</button>
-                </div>
-                <div class="zoom-controls">
-                  <button onclick="docZoom('reorder','out')" title="缩小">−</button>
-                  <span class="zoom-label" id="reorderZoomLabel">100%</span>
-                  <button onclick="docZoom('reorder','in')" title="放大">+</button>
-                  <button onclick="docZoom('reorder','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
-                </div>
-              </div>
-              <div class="doc-scroll" id="reorderScroll"></div>
-            </div>
+      <div class="doc-viewer-toolbar">
+      <div class="page-nav">
+      <button onclick="docNav('reorder','prev')" title="上一页">‹</button>
+      <span id="reorderPageInfo">1 / 1</span>
+      <button onclick="docNav('reorder','next')" title="下一页">›</button>
+      </div>
+      <div class="zoom-controls">
+      <button onclick="docZoom('reorder','out')" title="缩小">−</button>
+      <span class="zoom-label" id="reorderZoomLabel">100%</span>
+      <button onclick="docZoom('reorder','in')" title="放大">+</button>
+      <button onclick="docZoom('reorder','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+      </div>
+      </div>
+      <div class="doc-scroll" id="reorderScroll"></div>
+      </div>
       </div>
       <div class="tool-view-right">
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetAll()">重新开始</button>
-                <button class="btn btn-primary" onclick="doReorder()" id="btn-reorder" disabled>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  保存顺序并下载
-                </button>
-              </div>
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doReorder()" id="btn-reorder" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        保存顺序并下载
+        </button>
+        </div>
       </div>
     </div>
 
@@ -2124,58 +2137,58 @@
     <div class="tool-view" id="view-pdf2img">
       <div class="tool-view-left">
       <div class="drop-hero">
-              <h1 style="font-size:1.6rem">PDF 转图片</h1>
-              <p>将 PDF 每一页导出为 PNG 图片，支持选择分辨率</p>
-            </div>
+      <h1 style="font-size:1.6rem">PDF 转图片</h1>
+      <p>将 PDF 每一页导出为 PNG 图片，支持选择分辨率</p>
+      </div>
       <div class="doc-viewer" id="pdf2imgViewer">
-              <div class="doc-viewer-toolbar">
-                <div class="page-nav">
-                  <button onclick="docNav('pdf2img','prev')" title="上一页">‹</button>
-                  <span id="pdf2imgPageInfo">1 / 1</span>
-                  <button onclick="docNav('pdf2img','next')" title="下一页">›</button>
-                </div>
-                <div class="zoom-controls">
-                  <button onclick="docZoom('pdf2img','out')" title="缩小">−</button>
-                  <span class="zoom-label" id="pdf2imgZoomLabel">100%</span>
-                  <button onclick="docZoom('pdf2img','in')" title="放大">+</button>
-                  <button onclick="docZoom('pdf2img','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
-                </div>
-              </div>
-              <div class="doc-scroll" id="pdf2imgScroll"></div>
-            </div>
+      <div class="doc-viewer-toolbar">
+      <div class="page-nav">
+      <button onclick="docNav('pdf2img','prev')" title="上一页">‹</button>
+      <span id="pdf2imgPageInfo">1 / 1</span>
+      <button onclick="docNav('pdf2img','next')" title="下一页">›</button>
+      </div>
+      <div class="zoom-controls">
+      <button onclick="docZoom('pdf2img','out')" title="缩小">−</button>
+      <span class="zoom-label" id="pdf2imgZoomLabel">100%</span>
+      <button onclick="docZoom('pdf2img','in')" title="放大">+</button>
+      <button onclick="docZoom('pdf2img','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+      </div>
+      </div>
+      <div class="doc-scroll" id="pdf2imgScroll"></div>
+      </div>
       </div>
       <div class="tool-view-right">
         <div class="tool-panel">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-                  输出分辨率
-                </div>
-                <div class="rotate-controls">
-                  <button class="rotate-btn" onclick="setPdf2ImgDpi(1)" id="btn-dpi1" style="min-width:80px">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-                    72 DPI<br><small style="font-size:0.65rem;color:var(--text-light)">快速</small>
-                  </button>
-                  <button class="rotate-btn active-dpi" onclick="setPdf2ImgDpi(2)" id="btn-dpi2" style="min-width:80px">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="3"/></svg>
-                    150 DPI<br><small style="font-size:0.65rem;color:var(--text-light)">均衡</small>
-                  </button>
-                  <button class="rotate-btn" onclick="setPdf2ImgDpi(3)" id="btn-dpi3" style="min-width:80px">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="1" width="22" height="22" rx="4"/></svg>
-                    300 DPI<br><small style="font-size:0.65rem;color:var(--text-light)">极高</small>
-                  </button>
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        输出分辨率
+        </div>
+        <div class="rotate-controls">
+        <button class="rotate-btn" onclick="setPdf2ImgDpi(1)" id="btn-dpi1" style="min-width:80px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        72 DPI<br><small style="font-size:0.65rem;color:var(--text-light)">快速</small>
+        </button>
+        <button class="rotate-btn active-dpi" onclick="setPdf2ImgDpi(2)" id="btn-dpi2" style="min-width:80px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="3"/></svg>
+        150 DPI<br><small style="font-size:0.65rem;color:var(--text-light)">均衡</small>
+        </button>
+        <button class="rotate-btn" onclick="setPdf2ImgDpi(3)" id="btn-dpi3" style="min-width:80px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="1" width="22" height="22" rx="4"/></svg>
+        300 DPI<br><small style="font-size:0.65rem;color:var(--text-light)">极高</small>
+        </button>
+        </div>
+        </div>
         <div class="progress-wrap" id="pdf2imgProgress" style="display:none">
-                <div class="progress-bar-bg"><div class="progress-bar" id="pdf2imgProgressBar"></div></div>
-                <div class="progress-text" id="pdf2imgProgressText">正在渲染…</div>
-              </div>
+        <div class="progress-bar-bg"><div class="progress-bar" id="pdf2imgProgressBar"></div></div>
+        <div class="progress-text" id="pdf2imgProgressText">正在渲染…</div>
+        </div>
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetAll()">重新开始</button>
-                <button class="btn btn-primary" onclick="doPdf2Img()" id="btn-pdf2img" disabled>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  导出全部为 ZIP
-                </button>
-              </div>
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doPdf2Img()" id="btn-pdf2img" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        导出全部为 ZIP
+        </button>
+        </div>
       </div>
     </div>
 
@@ -2183,137 +2196,133 @@
     <div class="tool-view" id="view-img2pdf">
       <div class="tool-view-left">
       <div class="drop-hero">
-              <h1 style="font-size:1.6rem">图片转 PDF</h1>
-              <p>上传 JPG / PNG / WebP 图片，合并为一个 PDF 文件</p>
-            </div>
+      <h1 style="font-size:1.6rem">图片转 PDF</h1>
+      <p>上传 JPG / PNG / WebP 图片，合并为一个 PDF 文件</p>
+      </div>
+      <div id="img2pdfDropZone" class="drop-zone" style="padding:48px 24px;margin-bottom:16px">
+      <input type="file" id="img2pdfFileInput" accept="image/jpeg,image/png,image/webp,image/gif" multiple />
+      <svg width="44" height="44" viewBox="0 0 56 56" fill="none" style="margin:0 auto 14px;display:block;color:var(--accent)">
+      <circle cx="28" cy="28" r="24" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="2"/>
+      <path d="M20 28h16M28 20v16" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M18 36l6-6 4 4 6-6 4 4" stroke="var(--accent2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h3>上传图片</h3>
+      <p style="font-size:0.8rem">支持 JPG / PNG / WebP / GIF，支持多选</p>
+      <div class="drop-cta">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      选择图片文件
+      </div>
+      </div>
+      <div class="file-list" id="img2pdfFileList"></div>
       </div>
       <div class="tool-view-right">
-        <div id="img2pdfDropZone" class="drop-zone" style="padding:48px 24px;margin-bottom:16px">
-                <input type="file" id="img2pdfFileInput" accept="image/jpeg,image/png,image/webp,image/gif" multiple />
-                <svg width="44" height="44" viewBox="0 0 56 56" fill="none" style="margin:0 auto 14px;display:block;color:var(--accent)">
-                  <circle cx="28" cy="28" r="24" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="2"/>
-                  <path d="M20 28h16M28 20v16" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
-                  <path d="M18 36l6-6 4 4 6-6 4 4" stroke="var(--accent2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <h3>上传图片</h3>
-                <p style="font-size:0.8rem">支持 JPG / PNG / WebP / GIF，支持多选</p>
-                <div class="drop-cta">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  选择图片文件
-                </div>
-              </div>
-        <div class="file-list" id="img2pdfFileList"></div>
         <div class="tool-panel">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  PDF 页面设置
-                </div>
-                <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
-                  <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--text-muted)">
-                    页面尺寸
-                    <select id="img2pdfPageSize" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
-                      <option value="fit">适应图片</option>
-                      <option value="a4">A4</option>
-                      <option value="letter">Letter</option>
-                    </select>
-                  </label>
-                  <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--text-muted)">
-                    图片质量
-                    <select id="img2pdfQuality" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
-                      <option value="0.8">中等 (80%)</option>
-                      <option value="0.95">高 (95%)</option>
-                      <option value="1.0">最高 (100%)</option>
-                    </select>
-                  </label>
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        PDF 页面设置
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--text-muted)">
+        页面尺寸
+        <select id="img2pdfPageSize" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
+        <option value="fit">适应图片</option>
+        <option value="a4">A4</option>
+        <option value="letter">Letter</option>
+        </select>
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--text-muted)">
+        图片质量
+        <select id="img2pdfQuality" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
+        <option value="0.8">中等 (80%)</option>
+        <option value="0.95">高 (95%)</option>
+        <option value="1.0">最高 (100%)</option>
+        </select>
+        </label>
+        </div>
+        </div>
         <div class="progress-wrap" id="img2pdfProgress" style="display:none">
-                <div class="progress-bar-bg"><div class="progress-bar" id="img2pdfProgressBar"></div></div>
-                <div class="progress-text" id="img2pdfProgressText">正在处理…</div>
-              </div>
+        <div class="progress-bar-bg"><div class="progress-bar" id="img2pdfProgressBar"></div></div>
+        <div class="progress-text" id="img2pdfProgressText">正在处理…</div>
+        </div>
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetImg2Pdf()">清空图片</button>
-                <button class="btn btn-primary" onclick="doImg2Pdf()" id="btn-img2pdf" disabled>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  生成 PDF 并下载
-                </button>
-              </div>
+        <button class="btn" onclick="resetImg2Pdf()">清空图片</button>
+        <button class="btn btn-primary" onclick="doImg2Pdf()" id="btn-img2pdf" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        生成 PDF 并下载
+        </button>
+        </div>
       </div>
     </div>
 
     <!-- WATERMARK VIEW -->
     <div class="tool-view" id="view-watermark">
       <div class="tool-view-left">
-      <div class="drop-hero">
-              <h1 style="font-size:1.6rem">添加水印</h1>
-              <p>为 PDF 添加文字或图片水印，可调整位置、透明度</p>
-            </div>
-      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中为 PDF 添加水印</p></div></div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  水印内容
-                </div>
-                <div style="display:flex;gap:8px;margin-bottom:14px">
-                  <button class="btn active" id="btn-wm-text" onclick="setWmMode('text')" style="flex:1;justify-content:center">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-                    文字水印
-                  </button>
-                  <button class="btn" id="btn-wm-img" onclick="setWmMode('image')" style="flex:1;justify-content:center">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    图片水印
-                  </button>
-                </div>
-                <!-- Text watermark inputs -->
-                <div id="wm-text-panel">
-                  <div style="margin-bottom:10px">
-                    <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">水印文字</label>
-                    <input type="text" id="wmText" class="range-input" placeholder="例如：机密文件 · 勿外传" value="CONFIDENTIAL" />
-                  </div>
-                  <div style="display:flex;gap:10px;flex-wrap:wrap">
-                    <div style="flex:1;min-width:100px">
-                      <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">字号</label>
-                      <input type="number" id="wmFontSize" class="range-input" value="48" min="12" max="200" style="font-family:var(--font-sans)" />
-                    </div>
-                    <div style="flex:1;min-width:100px">
-                      <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">旋转角度</label>
-                      <input type="number" id="wmAngle" class="range-input" value="-45" min="-90" max="90" style="font-family:var(--font-sans)" />
-                    </div>
-                    <div style="flex:1;min-width:100px">
-                      <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">透明度</label>
-                      <input type="number" id="wmOpacity" class="range-input" value="20" min="5" max="80" style="font-family:var(--font-sans)" />
-                    </div>
-                  </div>
-                </div>
-                <!-- Image watermark inputs -->
-                <div id="wm-img-panel" style="display:none">
-                  <div style="display:flex;align-items:center;gap:12px">
-                    <div id="wmImgPreview" style="width:60px;height:60px;border:1px dashed var(--border2);border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--bg-card2);color:var(--text-light);font-size:0.7rem;text-align:center;flex-shrink:0;overflow:hidden">
-                      暂无
-                    </div>
-                    <div>
-                      <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px">支持 PNG / JPG，建议透明背景</p>
-                      <label class="btn btn-sm" style="cursor:pointer">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                        上传图片
-                        <input type="file" id="wmImgInput" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="handleWmImage(this)" />
-                      </label>
-                    </div>
-                    <div style="margin-left:auto">
-                      <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">透明度</label>
-                      <input type="number" id="wmImgOpacity" class="range-input" value="30" min="5" max="90" style="width:80px;font-family:var(--font-sans)" />
-                    </div>
-                  </div>
-                </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        水印内容
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button class="btn active" id="btn-wm-text" onclick="setWmMode('text')" style="flex:1;justify-content:center">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+        文字水印
+        </button>
+        <button class="btn" id="btn-wm-img" onclick="setWmMode('image')" style="flex:1;justify-content:center">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        图片水印
+        </button>
+        </div>
+        <!-- Text watermark inputs -->
+        <div id="wm-text-panel">
+        <div style="margin-bottom:10px">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">水印文字</label>
+        <input type="text" id="wmText" class="range-input" placeholder="例如：机密文件 · 勿外传" value="CONFIDENTIAL" />
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div style="flex:1;min-width:100px">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">字号</label>
+        <input type="number" id="wmFontSize" class="range-input" value="48" min="12" max="200" style="font-family:var(--font-sans)" />
+        </div>
+        <div style="flex:1;min-width:100px">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">旋转角度</label>
+        <input type="number" id="wmAngle" class="range-input" value="-45" min="-90" max="90" style="font-family:var(--font-sans)" />
+        </div>
+        <div style="flex:1;min-width:100px">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">透明度</label>
+        <input type="number" id="wmOpacity" class="range-input" value="20" min="5" max="80" style="font-family:var(--font-sans)" />
+        </div>
+        </div>
+        </div>
+        <!-- Image watermark inputs -->
+        <div id="wm-img-panel" style="display:none">
+        <div style="display:flex;align-items:center;gap:12px">
+        <div id="wmImgPreview" style="width:60px;height:60px;border:1px dashed var(--border2);border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--bg-card2);color:var(--text-light);font-size:0.7rem;text-align:center;flex-shrink:0;overflow:hidden">
+        暂无
+        </div>
+        <div>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px">支持 PNG / JPG，建议透明背景</p>
+        <label class="btn btn-sm" style="cursor:pointer">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        上传图片
+        <input type="file" id="wmImgInput" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="handleWmImage(this)" />
+        </label>
+        </div>
+        <div style="margin-left:auto">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">透明度</label>
+        <input type="number" id="wmImgOpacity" class="range-input" value="30" min="5" max="90" style="width:80px;font-family:var(--font-sans)" />
+        </div>
+        </div>
+        </div>
         <div style="margin-top:12px">
-                  <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">位置</label>
-                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:220px">
-                    <button class="rotate-btn wm-pos-btn active" onclick="setWmPos('center')" data-pos="center" style="padding:8px;font-size:0.7rem">居中</button>
-                    <button class="rotate-btn wm-pos-btn" onclick="setWmPos('diagonal')" data-pos="diagonal" style="padding:8px;font-size:0.7rem">对角</button>
-                    <button class="rotate-btn wm-pos-btn" onclick="setWmPos('corner')" data-pos="corner" style="padding:8px;font-size:0.7rem">右下角</button>
-                  </div>
-                </div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">位置</label>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:220px">
+        <button class="rotate-btn wm-pos-btn active" onclick="setWmPos('center')" data-pos="center" style="padding:8px;font-size:0.7rem">居中</button>
+        <button class="rotate-btn wm-pos-btn" onclick="setWmPos('diagonal')" data-pos="diagonal" style="padding:8px;font-size:0.7rem">对角</button>
+        <button class="rotate-btn wm-pos-btn" onclick="setWmPos('corner')" data-pos="corner" style="padding:8px;font-size:0.7rem">右下角</button>
+        </div>
+        </div>
       </div>
     </div>
 
@@ -2353,135 +2362,123 @@
     <!-- COMPRESS VIEW -->
     <div class="tool-view" id="view-compress">
       <div class="tool-view-left">
-      <div class="drop-hero">
-              <h1 style="font-size:1.6rem">压缩 PDF</h1>
-              <p>减小 PDF 文件体积，可选择压缩强度</p>
-            </div>
-      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中压缩文件大小</p></div></div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  压缩强度
-                </div>
-                <div class="rotate-controls" style="margin-top:12px">
-                  <button class="rotate-btn active-dpi" onclick="setCompressLevel('low')" id="btn-comp-low" style="min-width:90px;text-align:center;padding:12px 14px">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 14.899A7 7 0 1 1 15.1 4M21 12a9 9 0 0 0-9-9"/></svg>
-                    轻度
-                    <br><small style="font-size:0.65rem;color:var(--text-light)">保留画质</small>
-                  </button>
-                  <button class="rotate-btn" onclick="setCompressLevel('medium')" id="btn-comp-medium" style="min-width:90px;text-align:center;padding:12px 14px">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 14.899A7 7 0 1 1 15.1 4M21 12a9 9 0 0 0-9-9"/></svg>
-                    中度
-                    <br><small style="font-size:0.65rem;color:var(--text-light)">均衡</small>
-                  </button>
-                  <button class="rotate-btn" onclick="setCompressLevel('high')" id="btn-comp-high" style="min-width:90px;text-align:center;padding:12px 14px">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3"/><circle cx="12" cy="5" r="3"/></svg>
-                    强力
-                    <br><small style="font-size:0.65rem;color:var(--text-light)">最小体积</small>
-                  </button>
-                </div>
-                <div style="margin-top:14px;padding:10px 14px;background:var(--bg-card2);border-radius:8px;border:1px solid var(--border)">
-                  <p style="font-size:0.78rem;color:var(--text-muted);line-height:1.7" id="compressInfo">
-                    📄 加载 PDF 后将显示预估压缩效果
-                  </p>
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        压缩强度
+        </div>
+        <div class="rotate-controls" style="margin-top:12px">
+        <button class="rotate-btn active-dpi" onclick="setCompressLevel('low')" id="btn-comp-low" style="min-width:90px;text-align:center;padding:12px 14px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 14.899A7 7 0 1 1 15.1 4M21 12a9 9 0 0 0-9-9"/></svg>
+        轻度
+        <br><small style="font-size:0.65rem;color:var(--text-light)">保留画质</small>
+        </button>
+        <button class="rotate-btn" onclick="setCompressLevel('medium')" id="btn-comp-medium" style="min-width:90px;text-align:center;padding:12px 14px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 14.899A7 7 0 1 1 15.1 4M21 12a9 9 0 0 0-9-9"/></svg>
+        中度
+        <br><small style="font-size:0.65rem;color:var(--text-light)">均衡</small>
+        </button>
+        <button class="rotate-btn" onclick="setCompressLevel('high')" id="btn-comp-high" style="min-width:90px;text-align:center;padding:12px 14px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3"/><circle cx="12" cy="5" r="3"/></svg>
+        强力
+        <br><small style="font-size:0.65rem;color:var(--text-light)">最小体积</small>
+        </button>
+        </div>
+        <div style="margin-top:14px;padding:10px 14px;background:var(--bg-card2);border-radius:8px;border:1px solid var(--border)">
+        <p style="font-size:0.78rem;color:var(--text-muted);line-height:1.7" id="compressInfo">
+        📄 加载 PDF 后将显示预估压缩效果
+        </p>
+        </div>
+        </div>
         <div class="progress-wrap" id="compressProgress" style="display:none">
-                <div class="progress-bar-bg"><div class="progress-bar" id="compressProgressBar"></div></div>
-                <div class="progress-text" id="compressProgressText">正在压缩…</div>
-              </div>
+        <div class="progress-bar-bg"><div class="progress-bar" id="compressProgressBar"></div></div>
+        <div class="progress-text" id="compressProgressText">正在压缩…</div>
+        </div>
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetAll()">重新开始</button>
-                <button class="btn btn-primary" onclick="doCompress()" id="btn-compress" disabled>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  压缩并下载
-                </button>
-              </div>
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doCompress()" id="btn-compress" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        压缩并下载
+        </button>
+        </div>
       </div>
     </div>
 
     <!-- PASSWORD VIEW -->
     <div class="tool-view" id="view-password">
       <div class="tool-view-left">
-      <div class="drop-hero">
-              <h1 style="font-size:1.6rem">PDF 密码保护</h1>
-              <p>为 PDF 添加打开密码，防止未授权访问</p>
-            </div>
-      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中添加或移除密码</p></div></div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  设置密码
-                </div>
-                <div style="margin-top:14px">
-                  <div style="margin-bottom:10px">
-                    <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">密码</label>
-                    <input type="password" id="pwdPassword" class="range-input" placeholder="输入密码（必填）" style="font-family:var(--font-mono)" />
-                  </div>
-                  <div style="margin-bottom:10px">
-                    <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">确认密码</label>
-                    <input type="password" id="pwdConfirm" class="range-input" placeholder="再次输入密码" style="font-family:var(--font-mono)" />
-                  </div>
-                  <div id="pwdMatchHint" style="font-size:0.75rem;margin-top:4px;height:18px"></div>
-                </div>
-                <div style="padding:10px 14px;background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;margin-top:8px">
-                  <p style="font-size:0.75rem;color:var(--accent);line-height:1.6">
-                    ⚠️ 密码保护仅防止**打开 PDF**，无法防止打印或复制内容。如需更严格保护，请使用专业加密工具。
-                  </p>
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        设置密码
+        </div>
+        <div style="margin-top:14px">
+        <div style="margin-bottom:10px">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">密码</label>
+        <input type="password" id="pwdPassword" class="range-input" placeholder="输入密码（必填）" style="font-family:var(--font-mono)" />
+        </div>
+        <div style="margin-bottom:10px">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">确认密码</label>
+        <input type="password" id="pwdConfirm" class="range-input" placeholder="再次输入密码" style="font-family:var(--font-mono)" />
+        </div>
+        <div id="pwdMatchHint" style="font-size:0.75rem;margin-top:4px;height:18px"></div>
+        </div>
+        <div style="padding:10px 14px;background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;margin-top:8px">
+        <p style="font-size:0.75rem;color:var(--accent);line-height:1.6">
+        ⚠️ 密码保护仅防止**打开 PDF**，无法防止打印或复制内容。如需更严格保护，请使用专业加密工具。
+        </p>
+        </div>
+        </div>
         <div class="progress-wrap" id="pwdProgress" style="display:none">
-                <div class="progress-bar-bg"><div class="progress-bar" id="pwdProgressBar"></div></div>
-                <div class="progress-text" id="pwdProgressText">正在加密…</div>
-              </div>
+        <div class="progress-bar-bg"><div class="progress-bar" id="pwdProgressBar"></div></div>
+        <div class="progress-text" id="pwdProgressText">正在加密…</div>
+        </div>
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetAll()">重新开始</button>
-                <button class="btn btn-primary" onclick="doPassword()" id="btn-password" disabled>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  加密并下载
-                </button>
-              </div>
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doPassword()" id="btn-password" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        加密并下载
+        </button>
+        </div>
       </div>
     </div>
 
     <!-- PAGENUM VIEW -->
     <div class="tool-view" id="view-pagenum">
       <div class="tool-view-left">
-      <div class="drop-hero">
-              <h1 style="font-size:1.6rem">添加页码</h1>
-              <p>为每一页添加页码，支持位置、格式和起始页自定义</p>
-            </div>
-      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中添加页码</p></div></div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6H2v14"/><path d="M4 13a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1"/></svg>
-                  页码设置
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;margin-bottom:12px">
-                  <div>
-                    <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">格式</label>
-                    <select id="pgnFormat" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
-                      <option value="simple">1, 2, 3 …</option>
-                      <option value="of">1 / 10</option>
-                      <option value="dash">第 1 页</option>
-                      <option value="pofp">第 1 页，共 10 页</option>
-                      <option value="custom">自定义</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">位置</label>
-                    <select id="pgnPosition" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
-                      <option value="bottom-center">底部居中</option>
-                      <option value="bottom-right">右下角</option>
-                      <option value="bottom-left">左下角</option>
-                      <option value="top-center">顶部居中</option>
-                      <option value="top-right">右上角</option>
-                      <option value="top-left">左上角</option>
-                    </select>
-                  </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6H2v14"/><path d="M4 13a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1"/></svg>
+        页码设置
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;margin-bottom:12px">
+        <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">格式</label>
+        <select id="pgnFormat" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
+        <option value="simple">1, 2, 3 …</option>
+        <option value="of">1 / 10</option>
+        <option value="dash">第 1 页</option>
+        <option value="pofp">第 1 页，共 10 页</option>
+        <option value="custom">自定义</option>
+        </select>
+        </div>
+        <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">位置</label>
+        <select id="pgnPosition" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
+        <option value="bottom-center">底部居中</option>
+        <option value="bottom-right">右下角</option>
+        <option value="bottom-left">左下角</option>
+        <option value="top-center">顶部居中</option>
+        <option value="top-right">右上角</option>
+        <option value="top-left">左上角</option>
+        </select>
+        </div>
       </div>
     </div>
           <div>
@@ -2526,100 +2523,92 @@
     <!-- METADATA VIEW -->
     <div class="tool-view" id="view-metadata">
       <div class="tool-view-left">
-      <div class="drop-hero">
-              <h1 style="font-size:1.6rem">元数据清理</h1>
-              <p>移除 PDF 中的隐藏元数据（作者、公司、软件、创建日期等），保护隐私</p>
-            </div>
-      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中查看或编辑元数据</p></div></div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                  当前元数据
-                </div>
-                <div id="metadataInfo" style="padding:12px 14px;background:var(--bg-card2);border-radius:8px;border:1px solid var(--border);font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);min-height:80px">
-                  加载 PDF 后显示元数据信息…
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        当前元数据
+        </div>
+        <div id="metadataInfo" style="padding:12px 14px;background:var(--bg-card2);border-radius:8px;border:1px solid var(--border);font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);min-height:80px">
+        加载 PDF 后显示元数据信息…
+        </div>
+        </div>
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-                  清理选项
-                </div>
-                <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
-                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
-                    <input type="checkbox" id="metaCleanAuthor" checked style="width:16px;height:16px;accent-color:var(--accent)" />
-                    移除作者信息
-                  </label>
-                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
-                    <input type="checkbox" id="metaCleanCreator" checked style="width:16px;height:16px;accent-color:var(--accent)" />
-                    移除创建程序（软件名）
-                  </label>
-                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
-                    <input type="checkbox" id="metaCleanDates" checked style="width:16px;height:16px;accent-color:var(--accent)" />
-                    移除创建/修改日期
-                  </label>
-                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
-                    <input type="checkbox" id="metaCleanProducer" checked style="width:16px;height:16px;accent-color:var(--accent)" />
-                    移除 PDF 生成器
-                  </label>
-                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
-                    <input type="checkbox" id="metaCleanAll" style="width:16px;height:16px;accent-color:var(--accent)" />
-                    <strong>深度清理</strong>（同时移除缩略图、标注、隐藏图层）
-                  </label>
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        清理选项
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+        <input type="checkbox" id="metaCleanAuthor" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+        移除作者信息
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+        <input type="checkbox" id="metaCleanCreator" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+        移除创建程序（软件名）
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+        <input type="checkbox" id="metaCleanDates" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+        移除创建/修改日期
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+        <input type="checkbox" id="metaCleanProducer" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+        移除 PDF 生成器
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+        <input type="checkbox" id="metaCleanAll" style="width:16px;height:16px;accent-color:var(--accent)" />
+        <strong>深度清理</strong>（同时移除缩略图、标注、隐藏图层）
+        </label>
+        </div>
+        </div>
         <div class="progress-wrap" id="metaProgress" style="display:none">
-                <div class="progress-bar-bg"><div class="progress-bar" id="metaProgressBar"></div></div>
-                <div class="progress-text" id="metaProgressText">正在清理…</div>
-              </div>
+        <div class="progress-bar-bg"><div class="progress-bar" id="metaProgressBar"></div></div>
+        <div class="progress-text" id="metaProgressText">正在清理…</div>
+        </div>
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetAll()">重新开始</button>
-                <button class="btn btn-primary" onclick="doMetadataClean()" id="btn-metadata" disabled>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                  一键清理并下载
-                </button>
-              </div>
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doMetadataClean()" id="btn-metadata" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        一键清理并下载
+        </button>
+        </div>
       </div>
     </div>
 
     <!-- TO MARKDOWN VIEW -->
     <div class="tool-view" id="view-tomarkdown">
       <div class="tool-view-left">
-      <div class="drop-hero">
-              <h1 style="font-size:1.6rem">PDF 转 Markdown</h1>
-              <p>将 PDF 内容提取为 Markdown 格式，适合导入笔记软件或进一步编辑</p>
-            </div>
-      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中提取文本内容</p></div></div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                  提取设置
-                </div>
-                <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
-                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
-                    <input type="checkbox" id="mdExtractTables" checked style="width:16px;height:16px;accent-color:var(--accent)" />
-                    保留表格结构（转为 Markdown 表格）
-                  </label>
-                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
-                    <input type="checkbox" id="mdExtractImages" style="width:16px;height:16px;accent-color:var(--accent)" />
-                    同时导出图片（Base64 内嵌）
-                  </label>
-                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
-                    <input type="checkbox" id="mdPageBreak" checked style="width:16px;height:16px;accent-color:var(--accent)" />
-                    页面之间加分隔线
-                  </label>
-                  <div>
-                    <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">提取范围</label>
-                    <div style="display:flex;gap:8px">
-                      <input type="number" id="mdPageStart" class="range-input" placeholder="起始页" value="1" min="1" style="width:80px;font-family:var(--font-mono)" />
-                      <span style="color:var(--text-muted);line-height:38px">—</span>
-                      <input type="number" id="mdPageEnd" class="range-input" placeholder="结束页" value="" min="1" style="width:80px;font-family:var(--font-mono)" />
-                      <span style="color:var(--text-muted);font-size:0.78rem;line-height:38px;margin-left:4px" id="mdTotalPages">（全部）</span>
-                    </div>
-                  </div>
-                </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        提取设置
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+        <input type="checkbox" id="mdExtractTables" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+        保留表格结构（转为 Markdown 表格）
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+        <input type="checkbox" id="mdExtractImages" style="width:16px;height:16px;accent-color:var(--accent)" />
+        同时导出图片（Base64 内嵌）
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
+        <input type="checkbox" id="mdPageBreak" checked style="width:16px;height:16px;accent-color:var(--accent)" />
+        页面之间加分隔线
+        </label>
+        <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">提取范围</label>
+        <div style="display:flex;gap:8px">
+        <input type="number" id="mdPageStart" class="range-input" placeholder="起始页" value="1" min="1" style="width:80px;font-family:var(--font-mono)" />
+        <span style="color:var(--text-muted);line-height:38px">—</span>
+        <input type="number" id="mdPageEnd" class="range-input" placeholder="结束页" value="" min="1" style="width:80px;font-family:var(--font-mono)" />
+        <span style="color:var(--text-muted);font-size:0.78rem;line-height:38px;margin-left:4px" id="mdTotalPages">（全部）</span>
+        </div>
+        </div>
+        </div>
       </div>
     </div>
 
@@ -2654,34 +2643,30 @@
     <!-- TO WORD VIEW -->
     <div class="tool-view" id="view-toword">
       <div class="tool-view-left">
-      <div class="drop-hero">
-              <h1 style="font-size:1.6rem">PDF 转 Word</h1>
-              <p>将 PDF 内容转换为可编辑的 Word 文档（.docx），支持文本、标题和排版的保留</p>
-            </div>
-      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中转换为 Word 文档</p></div></div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  转换设置
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;margin-bottom:12px">
-                  <div>
-                    <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">转换模式</label>
-                    <select id="wordMode" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
-                      <option value="text">纯文本模式（最快，保留全部文字）</option>
-                      <option value="structured">结构化模式（识别标题、段落）</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">提取范围</label>
-                    <div style="display:flex;gap:8px;align-items:center">
-                      <input type="number" id="wordPageStart" class="range-input" placeholder="起始" value="1" min="1" style="width:60px;font-family:var(--font-mono)" />
-                      <span style="color:var(--text-muted)">—</span>
-                      <input type="number" id="wordPageEnd" class="range-input" placeholder="结束" value="" min="1" style="width:60px;font-family:var(--font-mono)" />
-                      <span style="color:var(--text-muted);font-size:0.75rem" id="wordTotalPages">（全部）</span>
-                    </div>
-                  </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        转换设置
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;margin-bottom:12px">
+        <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">转换模式</label>
+        <select id="wordMode" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
+        <option value="text">纯文本模式（最快，保留全部文字）</option>
+        <option value="structured">结构化模式（识别标题、段落）</option>
+        </select>
+        </div>
+        <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">提取范围</label>
+        <div style="display:flex;gap:8px;align-items:center">
+        <input type="number" id="wordPageStart" class="range-input" placeholder="起始" value="1" min="1" style="width:60px;font-family:var(--font-mono)" />
+        <span style="color:var(--text-muted)">—</span>
+        <input type="number" id="wordPageEnd" class="range-input" placeholder="结束" value="" min="1" style="width:60px;font-family:var(--font-mono)" />
+        <span style="color:var(--text-muted);font-size:0.75rem" id="wordTotalPages">（全部）</span>
+        </div>
+        </div>
       </div>
     </div>
 
@@ -2734,170 +2719,170 @@
     <div class="tool-view" id="view-highlight">
       <div class="tool-view-left">
       <div class="drop-hero">
-              <h1 style="font-size:1.6rem">文字高亮与标注</h1>
-              <p>为 PDF 添加高亮、底线、删除线或波浪线标注，适合文档审阅批注</p>
-            </div>
+      <h1 style="font-size:1.6rem">文字高亮与标注</h1>
+      <p>为 PDF 添加高亮、底线、删除线或波浪线标注，适合文档审阅批注</p>
+      </div>
       <div class="doc-viewer" id="highlightViewer">
-              <div class="doc-viewer-toolbar">
-                <div class="page-nav">
-                  <button onclick="docNav('highlight','prev')" title="上一页">‹</button>
-                  <span id="highlightPageInfo">1 / 1</span>
-                  <button onclick="docNav('highlight','next')" title="下一页">›</button>
-                </div>
-                <div class="zoom-controls">
-                  <button onclick="docZoom('highlight','out')" title="缩小">−</button>
-                  <span class="zoom-label" id="highlightZoomLabel">100%</span>
-                  <button onclick="docZoom('highlight','in')" title="放大">+</button>
-                  <button onclick="docZoom('highlight','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
-                </div>
-                <div style="margin-left:auto;font-size:0.75rem;color:var(--text-muted)">🖱️ 在页面上拖动添加标注</div>
-              </div>
-              <div class="doc-scroll" id="highlightScroll" style="position:relative"></div>
-            </div>
+      <div class="doc-viewer-toolbar">
+      <div class="page-nav">
+      <button onclick="docNav('highlight','prev')" title="上一页">‹</button>
+      <span id="highlightPageInfo">1 / 1</span>
+      <button onclick="docNav('highlight','next')" title="下一页">›</button>
+      </div>
+      <div class="zoom-controls">
+      <button onclick="docZoom('highlight','out')" title="缩小">−</button>
+      <span class="zoom-label" id="highlightZoomLabel">100%</span>
+      <button onclick="docZoom('highlight','in')" title="放大">+</button>
+      <button onclick="docZoom('highlight','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+      </div>
+      <div style="margin-left:auto;font-size:0.75rem;color:var(--text-muted)">🖱️ 在页面上拖动添加标注</div>
+      </div>
+      <div class="doc-scroll" id="highlightScroll" style="position:relative"></div>
+      </div>
       </div>
       <div class="tool-view-right">
         <div class="hl-toolbar" id="hlToolbar" style="display:none">
-                <label>标注类型</label>
-                <select id="hlType" onchange="selectedHlType=document.getElementById('hlType').value" style="padding:6px 10px">
-                  <option value="highlight">🖍️ 高亮</option>
-                  <option value="underline">底线</option>
-                  <option value="strikethrough">删除线</option>
-                  <option value="underline_wave">波浪下划线</option>
-                </select>
-                <label>颜色</label>
-                <div style="display:flex;gap:5px;align-items:center">
-                  <span class="hl-preview selected" style="background:#ffeb3b" data-color="#ffeb3b" onclick="selectHlColor(this)"></span>
-                  <span class="hl-preview" style="background:#4caf50" data-color="#4caf50" onclick="selectHlColor(this)"></span>
-                  <span class="hl-preview" style="background:#2196f3" data-color="#2196f3" onclick="selectHlColor(this)"></span>
-                  <span class="hl-preview" style="background:#ff9800" data-color="#ff9800" onclick="selectHlColor(this)"></span>
-                  <span class="hl-preview" style="background:#f44336" data-color="#f44336" onclick="selectHlColor(this)"></span>
-                  <span class="hl-preview" style="background:#9c27b0" data-color="#9c27b0" onclick="selectHlColor(this)"></span>
-                </div>
-                <input type="hidden" id="hlColor" value="#ffeb3b" />
-                <button class="btn btn-sm" onclick="clearHighlights()" style="margin-left:auto">清空全部</button>
-              </div>
+        <label>标注类型</label>
+        <select id="hlType" onchange="selectedHlType=document.getElementById('hlType').value" style="padding:6px 10px">
+        <option value="highlight">🖍️ 高亮</option>
+        <option value="underline">底线</option>
+        <option value="strikethrough">删除线</option>
+        <option value="underline_wave">波浪下划线</option>
+        </select>
+        <label>颜色</label>
+        <div style="display:flex;gap:5px;align-items:center">
+        <span class="hl-preview selected" style="background:#ffeb3b" data-color="#ffeb3b" onclick="selectHlColor(this)"></span>
+        <span class="hl-preview" style="background:#4caf50" data-color="#4caf50" onclick="selectHlColor(this)"></span>
+        <span class="hl-preview" style="background:#2196f3" data-color="#2196f3" onclick="selectHlColor(this)"></span>
+        <span class="hl-preview" style="background:#ff9800" data-color="#ff9800" onclick="selectHlColor(this)"></span>
+        <span class="hl-preview" style="background:#f44336" data-color="#f44336" onclick="selectHlColor(this)"></span>
+        <span class="hl-preview" style="background:#9c27b0" data-color="#9c27b0" onclick="selectHlColor(this)"></span>
+        </div>
+        <input type="hidden" id="hlColor" value="#ffeb3b" />
+        <button class="btn btn-sm" onclick="clearHighlights()" style="margin-left:auto">清空全部</button>
+        </div>
         <div class="progress-wrap" id="hlProgress" style="display:none">
-                <div class="progress-bar-bg"><div class="progress-bar" id="hlProgressBar"></div></div>
-                <div class="progress-text" id="hlProgressText">…</div>
-              </div>
+        <div class="progress-bar-bg"><div class="progress-bar" id="hlProgressBar"></div></div>
+        <div class="progress-text" id="hlProgressText">…</div>
+        </div>
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetAll()">重新开始</button>
-                <button class="btn btn-primary" onclick="doHighlight()" id="btn-highlight" disabled>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  应用标注并下载
-                </button>
-              </div>
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doHighlight()" id="btn-highlight" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        应用标注并下载
+        </button>
+        </div>
       </div>
     </div>
 
     <!-- SIGNATURE VIEW -->
     <div class="tool-view" id="view-sign">
       <div class="tool-view-left">
+      <div class="doc-viewer" id="signViewer">
+      <div class="doc-viewer-toolbar">
+      <div class="page-nav">
+      <button onclick="docNav('sign','prev')" title="上一页">‹</button>
+      <span id="signPageInfo">1 / 1</span>
+      <button onclick="docNav('sign','next')" title="下一页">›</button>
+      </div>
+      <div class="zoom-controls">
+      <button onclick="docZoom('sign','out')" title="缩小">−</button>
+      <span class="zoom-label" id="signZoomLabel">100%</span>
+      <button onclick="docZoom('sign','in')" title="放大">+</button>
+      <button onclick="docZoom('sign','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+      </div>
+      <div style="margin-left:auto;font-size:0.75rem;color:var(--text-muted)">🖱️ 拖拽签名到目标位置</div>
+      </div>
+      <div class="doc-scroll" id="signScroll" style="position:relative"></div>
+      </div>
       <div class="drop-hero">
-              <h1 style="font-size:1.6rem">PDF 签名</h1>
-              <p>手绘、打字或上传签名图片，拖拽放置到 PDF 任意位置</p>
-            </div>
+      <h1 style="font-size:1.6rem">PDF 签名</h1>
+      <p>手绘、打字或上传签名图片，拖拽放置到 PDF 任意位置</p>
+      </div>
       </div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 19.5v.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8.5L18 5.5"/></svg>
-                  签名方式
-                </div>
-                <div style="display:flex;gap:8px;margin-bottom:12px;margin-top:10px">
-                  <button class="rotate-btn active" onclick="switchSignMode('draw')" id="sigModeDraw">✏️ 手绘</button>
-                  <button class="rotate-btn" onclick="switchSignMode('type')" id="sigModeType">⌨️ 打字</button>
-                  <button class="rotate-btn" onclick="switchSignMode('upload')" id="sigModeUpload">📎 上传</button>
-                </div>
-                <div id="sigDrawPanel">
-                  <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px">在下方区域手绘签名（支持鼠标和触控板）</p>
-                  <div class="sig-wrap" id="sigCanvasWrap">
-                    <canvas id="sigCanvas" width="640" height="150"></canvas>
-                    <div class="sig-hint" id="sigHint">✏️ 按下鼠标开始绘制，松开结束</div>
-                  </div>
-                  <div style="display:flex;gap:12px;align-items:center;margin-top:8px;flex-wrap:wrap">
-                    <span style="font-size:0.75rem;color:var(--text-muted)">画笔
-                      <input type="color" id="sigColorPicker" value="#1c1917" onchange="sigBrushColor=this.value" style="width:28px;height:24px;border:none;cursor:pointer;vertical-align:middle">
-                    </span>
-                    <span style="font-size:0.75rem;color:var(--text-muted)">粗细
-                      <input type="range" id="sigBrushSlider" min="1" max="8" value="2" onchange="sigBrushSize=parseInt(this.value)" style="width:70px">
-                    </span>
-                    <button class="btn btn-sm" onclick="clearSignature()">🗑️ 清除</button>
-                  </div>
-                </div>
-                <div id="sigTypePanel" style="display:none">
-                  <div class="sig-type-row">
-                    <input type="text" id="sigTypeName" placeholder="在此输入姓名" value="" oninput="renderTypeSignature()" />
-                    <select id="sigTypeFont" onchange="renderTypeSignature()">
-                      <option value="'ZCOOL XiaoWei', serif">楷体</option>
-                      <option value="serif">衬线</option>
-                      <option value="cursive">手写体</option>
-                      <option value="monospace">等宽</option>
-                    </select>
-                  </div>
-                  <div class="sig-wrap" style="cursor:default">
-                    <canvas id="sigTypeCanvas" width="640" height="90"></canvas>
-                  </div>
-                </div>
-                <div id="sigUploadPanel" style="display:none">
-                  <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px">上传 PNG/JPG 签名图片（透明背景效果最佳）</p>
-                  <input type="file" id="sigFileInput" accept="image/*" onchange="loadSigImage(this)" style="display:none" />
-                  <button class="btn" onclick="document.getElementById('sigFileInput').click()" style="width:100%;margin-bottom:8px">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                    选择图片文件
-                  </button>
-                  <img id="sigUploadImg" style="max-width:100%;max-height:100px;border-radius:6px;display:none" />
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 19.5v.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8.5L18 5.5"/></svg>
+        签名方式
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;margin-top:10px">
+        <button class="rotate-btn active" onclick="switchSignMode('draw')" id="sigModeDraw">✏️ 手绘</button>
+        <button class="rotate-btn" onclick="switchSignMode('type')" id="sigModeType">⌨️ 打字</button>
+        <button class="rotate-btn" onclick="switchSignMode('upload')" id="sigModeUpload">📎 上传</button>
+        </div>
+        <div id="sigDrawPanel">
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px">在下方区域手绘签名（支持鼠标和触控板）</p>
+        <div class="sig-wrap" id="sigCanvasWrap">
+        <canvas id="sigCanvas" width="640" height="150"></canvas>
+        <div class="sig-hint" id="sigHint">✏️ 按下鼠标开始绘制，松开结束</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;margin-top:8px;flex-wrap:wrap">
+        <span style="font-size:0.75rem;color:var(--text-muted)">画笔
+        <input type="color" id="sigColorPicker" value="#1c1917" onchange="sigBrushColor=this.value" style="width:28px;height:24px;border:none;cursor:pointer;vertical-align:middle">
+        </span>
+        <span style="font-size:0.75rem;color:var(--text-muted)">粗细
+        <input type="range" id="sigBrushSlider" min="1" max="8" value="2" onchange="sigBrushSize=parseInt(this.value)" style="width:70px">
+        </span>
+        <button class="btn btn-sm" onclick="clearSignature()">🗑️ 清除</button>
+        </div>
+        </div>
+        <div id="sigTypePanel" style="display:none">
+        <div class="sig-type-row">
+        <input type="text" id="sigTypeName" placeholder="在此输入姓名" value="" oninput="renderTypeSignature()" />
+        <select id="sigTypeFont" onchange="renderTypeSignature()">
+        <option value="'ZCOOL XiaoWei', serif">楷体</option>
+        <option value="serif">衬线</option>
+        <option value="cursive">手写体</option>
+        <option value="monospace">等宽</option>
+        </select>
+        </div>
+        <div class="sig-wrap" style="cursor:default">
+        <canvas id="sigTypeCanvas" width="640" height="90"></canvas>
+        </div>
+        </div>
+        <div id="sigUploadPanel" style="display:none">
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px">上传 PNG/JPG 签名图片（透明背景效果最佳）</p>
+        <input type="file" id="sigFileInput" accept="image/*" onchange="loadSigImage(this)" style="display:none" />
+        <button class="btn" onclick="document.getElementById('sigFileInput').click()" style="width:100%;margin-bottom:8px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        选择图片文件
+        </button>
+        <img id="sigUploadImg" style="max-width:100%;max-height:100px;border-radius:6px;display:none" />
+        </div>
+        </div>
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
-                  放置签名 — 在预览页面上拖拽定位
-                </div>
-                <div style="display:flex;gap:8px;align-items:center;margin-top:10px;margin-bottom:10px">
-                  <label style="font-size:0.78rem;color:var(--text-muted)">放置到第</label>
-                  <input type="number" id="sigPage" class="range-input" value="1" min="1" style="width:55px;font-family:var(--font-mono)" oninput="updateSigPreviews()" />
-                  <label style="font-size:0.78rem;color:var(--text-muted)">页</label>
-                  <label style="font-size:0.78rem;color:var(--text-muted);margin-left:12px">宽度</label>
-                  <input type="number" id="sigWidth" class="range-input" value="180" min="50" max="400" style="width:55px;font-family:var(--font-mono)" oninput="updateSigPreviews()" />
-                  <label style="font-size:0.78rem;color:var(--text-muted)">px</label>
-                  <div style="margin-left:auto;display:flex;gap:6px">
-                    <button class="btn btn-sm" onclick="setSigPreset('center-bottom')">底部居中</button>
-                    <button class="btn btn-sm" onclick="setSigPreset('right-bottom')">右下角</button>
-                  </div>
-                </div>
-                <div class="doc-viewer" id="signViewer">
-                  <div class="doc-viewer-toolbar">
-                    <div class="page-nav">
-                      <button onclick="docNav('sign','prev')" title="上一页">‹</button>
-                      <span id="signPageInfo">1 / 1</span>
-                      <button onclick="docNav('sign','next')" title="下一页">›</button>
-                    </div>
-                    <div class="zoom-controls">
-                      <button onclick="docZoom('sign','out')" title="缩小">−</button>
-                      <span class="zoom-label" id="signZoomLabel">100%</span>
-                      <button onclick="docZoom('sign','in')" title="放大">+</button>
-                      <button onclick="docZoom('sign','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
-                    </div>
-                    <div style="margin-left:auto;font-size:0.75rem;color:var(--text-muted)">🖱️ 拖拽签名到目标位置</div>
-                  </div>
-                  <div class="doc-scroll" id="signScroll" style="position:relative"></div>
-                </div>
-                <!-- Hidden fields for coords, updated by drag -->
-                <input type="hidden" id="sigX" value="72" />
-                <input type="hidden" id="sigY" value="680" />
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+        放置签名 — 在预览页面上拖拽定位
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:10px;margin-bottom:10px">
+        <label style="font-size:0.78rem;color:var(--text-muted)">放置到第</label>
+        <input type="number" id="sigPage" class="range-input" value="1" min="1" style="width:55px;font-family:var(--font-mono)" oninput="updateSigPreviews()" />
+        <label style="font-size:0.78rem;color:var(--text-muted)">页</label>
+        <label style="font-size:0.78rem;color:var(--text-muted);margin-left:12px">宽度</label>
+        <input type="number" id="sigWidth" class="range-input" value="180" min="50" max="400" style="width:55px;font-family:var(--font-mono)" oninput="updateSigPreviews()" />
+        <label style="font-size:0.78rem;color:var(--text-muted)">px</label>
+        <div style="margin-left:auto;display:flex;gap:6px">
+        <button class="btn btn-sm" onclick="setSigPreset('center-bottom')">底部居中</button>
+        <button class="btn btn-sm" onclick="setSigPreset('right-bottom')">右下角</button>
+        </div>
+        </div>
+        <!-- Hidden fields for coords, updated by drag -->
+        <input type="hidden" id="sigX" value="72" />
+        <input type="hidden" id="sigY" value="680" />
+        </div>
         <div class="progress-wrap" id="sigProgress" style="display:none">
-                <div class="progress-bar-bg"><div class="progress-bar" id="sigProgressBar"></div></div>
-                <div class="progress-text" id="sigProgressText">…</div>
-              </div>
+        <div class="progress-bar-bg"><div class="progress-bar" id="sigProgressBar"></div></div>
+        <div class="progress-text" id="sigProgressText">…</div>
+        </div>
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetAll()">重新开始</button>
-                <button class="btn btn-primary" onclick="doSign()" id="btn-sign" disabled>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 19.5v.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8.5L18 5.5"/></svg>
-                  添加签名并下载
-                </button>
-              </div>
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doSign()" id="btn-sign" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 19.5v.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8.5L18 5.5"/></svg>
+        添加签名并下载
+        </button>
+        </div>
       </div>
     </div>
 
@@ -2905,85 +2890,85 @@
     <div class="tool-view" id="view-crop">
       <div class="tool-view-left">
       <div class="drop-hero">
-              <h1 style="font-size:1.6rem">裁剪页面</h1>
-              <p>裁剪 PDF 页面边缘，去除白边或调整边距</p>
-            </div>
+      <h1 style="font-size:1.6rem">裁剪页面</h1>
+      <p>裁剪 PDF 页面边缘，去除白边或调整边距</p>
+      </div>
       <div class="doc-viewer" id="cropViewer">
-              <div class="doc-viewer-toolbar">
-                <div class="page-nav">
-                  <button onclick="docNav('crop','prev')" title="上一页">‹</button>
-                  <span id="cropPageInfo">1 / 1</span>
-                  <button onclick="docNav('crop','next')" title="下一页">›</button>
-                </div>
-                <div class="zoom-controls">
-                  <button onclick="docZoom('crop','out')" title="缩小">−</button>
-                  <span class="zoom-label" id="cropZoomLabel">100%</span>
-                  <button onclick="docZoom('crop','in')" title="放大">+</button>
-                  <button onclick="docZoom('crop','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
-                </div>
-              </div>
-              <div class="doc-scroll" id="cropScroll" style="position:relative"></div>
-            </div>
+      <div class="doc-viewer-toolbar">
+      <div class="page-nav">
+      <button onclick="docNav('crop','prev')" title="上一页">‹</button>
+      <span id="cropPageInfo">1 / 1</span>
+      <button onclick="docNav('crop','next')" title="下一页">›</button>
+      </div>
+      <div class="zoom-controls">
+      <button onclick="docZoom('crop','out')" title="缩小">−</button>
+      <span class="zoom-label" id="cropZoomLabel">100%</span>
+      <button onclick="docZoom('crop','in')" title="放大">+</button>
+      <button onclick="docZoom('crop','fit')" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+      </div>
+      </div>
+      <div class="doc-scroll" id="cropScroll" style="position:relative"></div>
+      </div>
       </div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 2v4"/><path d="M18 18v4"/><path d="M2 6h4"/><path d="M18 6h4"/></svg>
-                  预设裁剪
-                </div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
-                  <button class="btn btn-sm" onclick="applyCropPreset('remove-white')">去白边</button>
-                  <button class="btn btn-sm" onclick="applyCropPreset('letter')">Letter 边距</button>
-                  <button class="btn btn-sm" onclick="applyCropPreset('a4')">A4 边距</button>
-                  <button class="btn btn-sm" onclick="resetCrop()">重置</button>
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 2v4"/><path d="M18 18v4"/><path d="M2 6h4"/><path d="M18 6h4"/></svg>
+        预设裁剪
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+        <button class="btn btn-sm" onclick="applyCropPreset('remove-white')">去白边</button>
+        <button class="btn btn-sm" onclick="applyCropPreset('letter')">Letter 边距</button>
+        <button class="btn btn-sm" onclick="applyCropPreset('a4')">A4 边距</button>
+        <button class="btn btn-sm" onclick="resetCrop()">重置</button>
+        </div>
+        </div>
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
-                  手动调整（当前浏览页）
-                </div>
-                <div class="crop-bar" style="margin-top:10px">
-                  <span>上
-                    <input type="number" id="cropTop" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
-                    pt
-                  </span>
-                  <span>下
-                    <input type="number" id="cropBottom" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
-                    pt
-                  </span>
-                  <span>左
-                    <input type="number" id="cropLeft" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
-                    pt
-                  </span>
-                  <span>右
-                    <input type="number" id="cropRight" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
-                    pt
-                  </span>
-                  <span id="cropDims" style="margin-left:auto;color:var(--accent2);font-family:var(--font-mono);font-size:0.75rem">—</span>
-                </div>
-                <div style="margin-top:10px">
-                  <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">应用范围（第几页到第几页）</label>
-                  <div style="display:flex;gap:8px;align-items:center">
-                    <span style="color:var(--text-muted)">第</span>
-                    <input type="number" id="cropPageStart" class="range-input" value="1" min="1" style="width:60px;font-family:var(--font-mono)" />
-                    <span style="color:var(--text-muted)">页 至 第</span>
-                    <input type="number" id="cropPageEnd" class="range-input" placeholder="" value="" min="1" style="width:60px;font-family:var(--font-mono)" />
-                    <span style="color:var(--text-muted)">页</span>
-                  </div>
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+        手动调整（当前浏览页）
+        </div>
+        <div class="crop-bar" style="margin-top:10px">
+        <span>上
+        <input type="number" id="cropTop" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
+        pt
+        </span>
+        <span>下
+        <input type="number" id="cropBottom" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
+        pt
+        </span>
+        <span>左
+        <input type="number" id="cropLeft" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
+        pt
+        </span>
+        <span>右
+        <input type="number" id="cropRight" class="range-input" value="0" min="0" max="300" style="width:55px" oninput="updateCropOverlay()" />
+        pt
+        </span>
+        <span id="cropDims" style="margin-left:auto;color:var(--accent2);font-family:var(--font-mono);font-size:0.75rem">—</span>
+        </div>
+        <div style="margin-top:10px">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">应用范围（第几页到第几页）</label>
+        <div style="display:flex;gap:8px;align-items:center">
+        <span style="color:var(--text-muted)">第</span>
+        <input type="number" id="cropPageStart" class="range-input" value="1" min="1" style="width:60px;font-family:var(--font-mono)" />
+        <span style="color:var(--text-muted)">页 至 第</span>
+        <input type="number" id="cropPageEnd" class="range-input" placeholder="" value="" min="1" style="width:60px;font-family:var(--font-mono)" />
+        <span style="color:var(--text-muted)">页</span>
+        </div>
+        </div>
+        </div>
         <div class="progress-wrap" id="cropProgress" style="display:none">
-                <div class="progress-bar-bg"><div class="progress-bar" id="cropProgressBar"></div></div>
-                <div class="progress-text" id="cropProgressText">…</div>
-              </div>
+        <div class="progress-bar-bg"><div class="progress-bar" id="cropProgressBar"></div></div>
+        <div class="progress-text" id="cropProgressText">…</div>
+        </div>
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetAll()">重新开始</button>
-                <button class="btn btn-primary" onclick="doCrop()" id="btn-crop" disabled>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 2v4"/><path d="M18 18v4"/><path d="M2 6h4"/><path d="M18 6h4"/></svg>
-                  应用裁剪并下载
-                </button>
-              </div>
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="doCrop()" id="btn-crop" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 2v4"/><path d="M18 18v4"/><path d="M2 6h4"/><path d="M18 6h4"/></svg>
+        应用裁剪并下载
+        </button>
+        </div>
       </div>
     </div>
 
@@ -2991,40 +2976,36 @@
     <!-- OCR VIEW -->
     <div class="tool-view" id="view-ocr">
       <div class="tool-view-left">
-      <div class="drop-hero">
-              <h1 style="font-size:1.6rem">PDF 文字识别（OCR）</h1>
-              <p>从扫描件、图片型 PDF 中提取文字，支持中英日韩等 100+ 语言</p>
-            </div>
-      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h3v3H7zM14 7h3v3h-3zM7 14h3v3H7zM14 14h3v3h-3z"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 或图片文件<br>然后在此工具中进行 OCR 识别</p></div></div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
-                  OCR 设置
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;margin-bottom:10px">
-                  <div>
-                    <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">识别语言</label>
-                    <select id="ocrLang" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
-                      <option value="chi_sim+eng">简体中文 + English</option>
-                      <option value="chi_tra+eng">繁體中文 + English</option>
-                      <option value="eng">English</option>
-                      <option value="jpn">日本語</option>
-                      <option value="kor">한국어</option>
-                      <option value="fra">Français</option>
-                      <option value="deu">Deutsch</option>
-                      <option value="spa">Español</option>
-                      <option value="ara">العربية</option>
-                      <option value="osd">自动检测语言</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">精度模式</label>
-                    <select id="ocrMode" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
-                      <option value="accurate">精准模式（慢但准）</option>
-                      <option value="fast">快速模式</option>
-                    </select>
-                  </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+        OCR 设置
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;margin-bottom:10px">
+        <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">识别语言</label>
+        <select id="ocrLang" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
+        <option value="chi_sim+eng">简体中文 + English</option>
+        <option value="chi_tra+eng">繁體中文 + English</option>
+        <option value="eng">English</option>
+        <option value="jpn">日本語</option>
+        <option value="kor">한국어</option>
+        <option value="fra">Français</option>
+        <option value="deu">Deutsch</option>
+        <option value="spa">Español</option>
+        <option value="ara">العربية</option>
+        <option value="osd">自动检测语言</option>
+        </select>
+        </div>
+        <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:5px">精度模式</label>
+        <select id="ocrMode" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.82rem">
+        <option value="accurate">精准模式（慢但准）</option>
+        <option value="fast">快速模式</option>
+        </select>
+        </div>
       </div>
     </div>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text)">
@@ -3063,36 +3044,32 @@
     <!-- PDF COMPARE VIEW -->
     <div class="tool-view" id="view-compare">
       <div class="tool-view-left">
-      <div class="drop-hero">
-              <h1 style="font-size:1.6rem">PDF 对比</h1>
-              <p>比较两个 PDF 文档的差异，标注新增、删除和修改的内容</p>
-            </div>
-      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传两个 PDF 文件<br>然后在此工具中进行对比</p></div></div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/><path d="M10 12h4"/></svg>
-                  选择两个文件进行对比
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px">
-                  <div>
-                    <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;font-weight:600">📄 原文件（旧版）</div>
-                    <div class="drop-zone" id="cmpOldZone" onclick="document.getElementById('cmpOldInput').click()" style="padding:18px;border-radius:10px;border:2px dashed var(--border2);text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg-card2)">
-                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                      <div style="margin-top:8px;font-size:0.8rem;color:var(--text-muted)">点击上传原文件 PDF</div>
-                      <div style="margin-top:4px;font-size:0.72rem;color:var(--text-light)" id="cmpOldName">未选择</div>
-                    </div>
-                    <input type="file" id="cmpOldInput" accept=".pdf" style="display:none" onchange="handleCompareOldFile(this.files[0])" />
-                  </div>
-                  <div>
-                    <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;font-weight:600">📄 新文件（最新版）</div>
-                    <div class="drop-zone" id="cmpNewZone" onclick="document.getElementById('cmpNewInput').click()" style="padding:18px;border-radius:10px;border:2px dashed var(--border2);text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg-card2)">
-                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                      <div style="margin-top:8px;font-size:0.8rem;color:var(--text-muted)">点击上传新版 PDF</div>
-                      <div style="margin-top:4px;font-size:0.72rem;color:var(--text-light)" id="cmpNewName">未选择</div>
-                    </div>
-                    <input type="file" id="cmpNewInput" accept=".pdf" style="display:none" onchange="handleCompareNewFile(this.files[0])" />
-                  </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/><path d="M10 12h4"/></svg>
+        选择两个文件进行对比
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px">
+        <div>
+        <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;font-weight:600">📄 原文件（旧版）</div>
+        <div class="drop-zone" id="cmpOldZone" onclick="document.getElementById('cmpOldInput').click()" style="padding:18px;border-radius:10px;border:2px dashed var(--border2);text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg-card2)">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <div style="margin-top:8px;font-size:0.8rem;color:var(--text-muted)">点击上传原文件 PDF</div>
+        <div style="margin-top:4px;font-size:0.72rem;color:var(--text-light)" id="cmpOldName">未选择</div>
+        </div>
+        <input type="file" id="cmpOldInput" accept=".pdf" style="display:none" onchange="handleCompareOldFile(this.files[0])" />
+        </div>
+        <div>
+        <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;font-weight:600">📄 新文件（最新版）</div>
+        <div class="drop-zone" id="cmpNewZone" onclick="document.getElementById('cmpNewInput').click()" style="padding:18px;border-radius:10px;border:2px dashed var(--border2);text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg-card2)">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <div style="margin-top:8px;font-size:0.8rem;color:var(--text-muted)">点击上传新版 PDF</div>
+        <div style="margin-top:4px;font-size:0.72rem;color:var(--text-light)" id="cmpNewName">未选择</div>
+        </div>
+        <input type="file" id="cmpNewInput" accept=".pdf" style="display:none" onchange="handleCompareNewFile(this.files[0])" />
+        </div>
       </div>
     </div>
         <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
@@ -3149,98 +3126,90 @@
     <!-- WORKFLOW EDITOR VIEW -->
     <div class="tool-view" id="view-workflow">
       <div class="tool-view-left">
-      <div class="drop-hero">
-              <h1 style="font-size:1.6rem">工作流自动化</h1>
-              <p>组合多个 PDF 操作，按顺序自动执行，适合批量处理复杂任务</p>
-            </div>
-      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中执行批量处理流程</p></div></div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="12" r="2"/></svg>
-                  添加操作步骤（点击添加）
-                </div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-                  <button class="workflow-step-btn" onclick="addWorkflowStep('merge')">📎 合并 PDF</button>
-                  <button class="workflow-step-btn" onclick="addWorkflowStep('split')">✂️ 拆分 PDF</button>
-                  <button class="workflow-step-btn" onclick="addWorkflowStep('compress')">🗜️ 压缩 PDF</button>
-                  <button class="workflow-step-btn" onclick="addWorkflowStep('watermark')">💧 添加水印</button>
-                  <button class="workflow-step-btn" onclick="addWorkflowStep('pagenum')">🔢 添加页码</button>
-                  <button class="workflow-step-btn" onclick="addWorkflowStep('encrypt')">🔐 加密 PDF</button>
-                  <button class="workflow-step-btn" onclick="addWorkflowStep('rotate')">🔄 旋转页面</button>
-                  <button class="workflow-step-btn" onclick="addWorkflowStep('crop')">✂️ 裁剪页面</button>
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+        添加操作步骤（点击添加）
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button class="workflow-step-btn" onclick="addWorkflowStep('merge')">📎 合并 PDF</button>
+        <button class="workflow-step-btn" onclick="addWorkflowStep('split')">✂️ 拆分 PDF</button>
+        <button class="workflow-step-btn" onclick="addWorkflowStep('compress')">🗜️ 压缩 PDF</button>
+        <button class="workflow-step-btn" onclick="addWorkflowStep('watermark')">💧 添加水印</button>
+        <button class="workflow-step-btn" onclick="addWorkflowStep('pagenum')">🔢 添加页码</button>
+        <button class="workflow-step-btn" onclick="addWorkflowStep('encrypt')">🔐 加密 PDF</button>
+        <button class="workflow-step-btn" onclick="addWorkflowStep('rotate')">🔄 旋转页面</button>
+        <button class="workflow-step-btn" onclick="addWorkflowStep('crop')">✂️ 裁剪页面</button>
+        </div>
+        </div>
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                  工作流步骤（拖动排序）
-                </div>
-                <div id="workflowSteps" style="min-height:120px;margin-top:10px;padding:10px;border:2px dashed var(--border);border-radius:10px;background:var(--bg-card2)">
-                  <div id="workflowEmptyHint" style="text-align:center;padding:30px;color:var(--text-light);font-size:0.85rem">
-                    从上方点击操作按钮添加步骤<br>
-                    <span style="font-size:0.75rem">步骤将按从上到下顺序执行</span>
-                  </div>
-                </div>
-                <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-                  <button class="btn btn-sm" onclick="clearWorkflow()" style="color:var(--text-muted)">🗑️ 清空全部</button>
-                  <button class="btn btn-sm" onclick="saveWorkflow()" style="border:1px solid var(--border2);color:var(--text)">💾 保存工作流</button>
-                  <button class="btn btn-sm" onclick="loadWorkflow()" style="border:1px solid var(--border2);color:var(--text)">📂 加载工作流</button>
-                  <input type="file" id="workflowFileInput" accept=".json" style="display:none" onchange="loadWorkflowFromFile(this.files[0])" />
-                </div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        工作流步骤（拖动排序）
+        </div>
+        <div id="workflowSteps" style="min-height:120px;margin-top:10px;padding:10px;border:2px dashed var(--border);border-radius:10px;background:var(--bg-card2)">
+        <div id="workflowEmptyHint" style="text-align:center;padding:30px;color:var(--text-light);font-size:0.85rem">
+        从上方点击操作按钮添加步骤<br>
+        <span style="font-size:0.75rem">步骤将按从上到下顺序执行</span>
+        </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <button class="btn btn-sm" onclick="clearWorkflow()" style="color:var(--text-muted)">🗑️ 清空全部</button>
+        <button class="btn btn-sm" onclick="saveWorkflow()" style="border:1px solid var(--border2);color:var(--text)">💾 保存工作流</button>
+        <button class="btn btn-sm" onclick="loadWorkflow()" style="border:1px solid var(--border2);color:var(--text)">📂 加载工作流</button>
+        <input type="file" id="workflowFileInput" accept=".json" style="display:none" onchange="loadWorkflowFromFile(this.files[0])" />
+        </div>
+        </div>
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  上传输入文件
-                </div>
-                <div class="drop-zone" id="wfDropZone" style="margin-top:10px;padding:28px;border-radius:10px;border:2px dashed var(--border2);text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg-card2)" onclick="document.getElementById('wfFileInput').click()">
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-                  <div style="margin-top:10px;font-size:0.85rem;color:var(--text-muted)">拖放 PDF 文件到这里，或点击上传</div>
-                  <div style="margin-top:4px;font-size:0.72rem;color:var(--text-light)" id="wfFileCount">支持多个文件（用于合并等操作）</div>
-                </div>
-                <input type="file" id="wfFileInput" accept=".pdf" multiple style="display:none" onchange="handleWorkflowFiles(this.files)" />
-                <div id="wfFileList" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px"></div>
-              </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        上传输入文件
+        </div>
+        <div class="drop-zone" id="wfDropZone" style="margin-top:10px;padding:28px;border-radius:10px;border:2px dashed var(--border2);text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg-card2)" onclick="document.getElementById('wfFileInput').click()">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        <div style="margin-top:10px;font-size:0.85rem;color:var(--text-muted)">拖放 PDF 文件到这里，或点击上传</div>
+        <div style="margin-top:4px;font-size:0.72rem;color:var(--text-light)" id="wfFileCount">支持多个文件（用于合并等操作）</div>
+        </div>
+        <input type="file" id="wfFileInput" accept=".pdf" multiple style="display:none" onchange="handleWorkflowFiles(this.files)" />
+        <div id="wfFileList" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px"></div>
+        </div>
         <div class="progress-wrap" id="wfProgress" style="display:none;margin-bottom:12px">
-                <div class="progress-bar-bg"><div class="progress-bar" id="wfProgressBar"></div></div>
-                <div class="progress-text" id="wfProgressText">准备中…</div>
-              </div>
+        <div class="progress-bar-bg"><div class="progress-bar" id="wfProgressBar"></div></div>
+        <div class="progress-text" id="wfProgressText">准备中…</div>
+        </div>
         <div class="action-buttons" style="justify-content:center">
-                <button class="btn" onclick="resetAll()">重新开始</button>
-                <button class="btn btn-primary" onclick="runWorkflow()" id="btn-runworkflow" disabled>
-                  🚀 执行工作流
-                </button>
-              </div>
+        <button class="btn" onclick="resetAll()">重新开始</button>
+        <button class="btn btn-primary" onclick="runWorkflow()" id="btn-runworkflow" disabled>
+        🚀 执行工作流
+        </button>
+        </div>
       </div>
     </div>
 
     <!-- WECHAT MINI PROGRAM INFO VIEW -->
     <div class="tool-view" id="view-wxmini">
       <div class="tool-view-left">
-      <div class="drop-hero">
-              <h1 style="font-size:1.6rem">微信小程序版</h1>
-              <p>将 PDF 工具嵌入微信小程序，让用户在手机端直接使用</p>
-            </div>
-      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中生成小程序码</p></div></div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div class="tool-panel-title">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
-                  小程序集成方案
-                </div>
-                <div style="margin-top:12px;padding:14px;background:linear-gradient(135deg,rgba(7,193,96,0.08),rgba(0,163,83,0.08));border:1px solid #07c160;border-radius:10px">
-                  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-                    <div style="width:44px;height:44px;background:#07c160;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px">🌿</div>
-                    <div>
-                      <div style="font-size:0.9rem;font-weight:600;color:var(--text)">PDF墨韵工具 · 微信小程序</div>
-                      <div style="font-size:0.75rem;color:var(--text-muted)">WebView 嵌入 · 同等体验</div>
-                    </div>
-                  </div>
-                  <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.7">
-                    在微信小程序中嵌入 WebView，加载本工具的网页版，用户无需下载即可在手机端使用全部 18 个 PDF 工具。
-                  </div>
-                </div>
+        <div class="tool-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+        小程序集成方案
+        </div>
+        <div style="margin-top:12px;padding:14px;background:linear-gradient(135deg,rgba(7,193,96,0.08),rgba(0,163,83,0.08));border:1px solid #07c160;border-radius:10px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:44px;height:44px;background:#07c160;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px">🌿</div>
+        <div>
+        <div style="font-size:0.9rem;font-weight:600;color:var(--text)">PDF墨韵工具 · 微信小程序</div>
+        <div style="font-size:0.75rem;color:var(--text-muted)">WebView 嵌入 · 同等体验</div>
+        </div>
+        </div>
+        <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.7">
+        在微信小程序中嵌入 WebView，加载本工具的网页版，用户无需下载即可在手机端使用全部 18 个 PDF 工具。
+        </div>
+        </div>
       </div>
     </div>
 
@@ -3300,26 +3269,26 @@
     <div class="tool-view" id="view-history">
       <div class="tool-view-left">
       <div class="drop-hero">
-              <h1 style="font-size:1.6rem">处理历史</h1>
-              <p>查看最近处理的 PDF 文件记录</p>
-            </div>
+      <h1 style="font-size:1.6rem">处理历史</h1>
+      <p>查看最近处理的 PDF 文件记录</p>
+      </div>
       </div>
       <div class="tool-view-right">
         <div class="tool-panel" style="margin-bottom:12px">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-                  <div class="tool-panel-title" style="margin:0">最近处理的文件</div>
-                  <button class="btn btn-sm" onclick="clearHistory()" style="color:var(--text-muted)">清空全部</button>
-                </div>
-                <div id="historyList" style="max-height:400px;overflow-y:auto">
-                  <div style="padding:20px;text-align:center;color:var(--text-light)">暂无记录</div>
-                </div>
-              </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div class="tool-panel-title" style="margin:0">最近处理的文件</div>
+        <button class="btn btn-sm" onclick="clearHistory()" style="color:var(--text-muted)">清空全部</button>
+        </div>
+        <div id="historyList" style="max-height:400px;overflow-y:auto">
+        <div style="padding:20px;text-align:center;color:var(--text-light)">暂无记录</div>
+        </div>
+        </div>
         <div class="tool-panel">
-                <div class="tool-panel-title">数据说明</div>
-                <div style="margin-top:10px;font-size:0.78rem;color:var(--text-muted);line-height:1.7">
-                  <p>📝 历史保存在浏览器本地，不上传服务器</p>
-                </div>
-              </div>
+        <div class="tool-panel-title">数据说明</div>
+        <div style="margin-top:10px;font-size:0.78rem;color:var(--text-muted);line-height:1.7">
+        <p>📝 历史保存在浏览器本地，不上传服务器</p>
+        </div>
+        </div>
       </div>
     </div>
 
