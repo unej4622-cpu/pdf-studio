@@ -205,7 +205,8 @@
     .nav-tabs {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
+      flex-wrap: wrap;
     }
     
     .nav-group {
@@ -440,10 +441,36 @@
     }
 
     /* ===== MAIN ===== */
+    .tool-title-bar {
+      grid-area: title;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 20px 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .tool-back-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .tool-back-btn:hover { background: var(--bg-card2); color: var(--text); }
+    .tool-title { font-size: 1rem; font-weight: 600; color: var(--text); margin: 0; }
+    .tool-title-spacer { flex: 1; }
+
     .app-main {
       max-width: none;
       margin: 0 auto;
-      padding: 24px 20px 80px
+      padding: 0
     }
 
     /* ===== HERO / DROP ZONE - iOS Style ===== */
@@ -477,6 +504,8 @@
       border-radius: var(--radius-xl);
       padding: 60px 32px;
       text-align: center;
+      max-width: 720px;
+      margin: 0 auto;
       cursor: pointer;
       transition: all var(--duration-normal) var(--smooth);
       background: var(--bg-card-solid);
@@ -1768,68 +1797,36 @@
 
     <nav class="nav-tabs" role="tablist">
       <!-- 页面操作 -->
-      <div class="nav-group">
-        <button class="nav-group-btn">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
-          <span>页面</span>
-          <svg class="chev" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="nav-dropdown">
-          <button class="dd-item" data-tool="merge"><span>合并 PDF</span></button>
-          <button class="dd-item" data-tool="split"><span>拆分 PDF</span></button>
-          <button class="dd-item" data-tool="rotate"><span>旋转页面</span></button>
-          <button class="dd-item" data-tool="delete"><span>删除页面</span></button>
-          <button class="dd-item" data-tool="reorder"><span>页面排序</span></button>
-          <button class="dd-item" data-tool="crop"><span>裁剪页面</span></button>
-          <button class="dd-item" data-tool="pagenum"><span>添加页码</span></button>
-        </div>
-      </div>
+      <button class="dd-item" data-tool="merge"><span>合并 PDF</span></button>
+    <button class="dd-item" data-tool="split"><span>拆分 PDF</span></button>
+    <button class="dd-item" data-tool="rotate"><span>旋转页面</span></button>
+    <button class="dd-item" data-tool="delete"><span>删除页面</span></button>
+    <button class="dd-item" data-tool="reorder"><span>页面排序</span></button>
+    <button class="dd-item" data-tool="crop"><span>裁剪页面</span></button>
+    <button class="dd-item" data-tool="pagenum"><span>添加页码</span></button>
+    
       
       <!-- 内容编辑 -->
-      <div class="nav-group">
-        <button class="nav-group-btn">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          <span>编辑</span>
-          <svg class="chev" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="nav-dropdown">
-          <button class="dd-item" data-tool="watermark"><span>添加水印</span></button>
-          <button class="dd-item" data-tool="highlight"><span>高亮标注</span></button>
-          <button class="dd-item" data-tool="sign"><span>电子签名</span></button>
-          <button class="dd-item" data-tool="password"><span>加密/解密</span></button>
-        </div>
-      </div>
+      <button class="dd-item" data-tool="watermark"><span>添加水印</span></button>
+    <button class="dd-item" data-tool="highlight"><span>高亮标注</span></button>
+    <button class="dd-item" data-tool="sign"><span>电子签名</span></button>
+    <button class="dd-item" data-tool="password"><span>加密/解密</span></button>
+    
       
       <!-- 格式转换 -->
-      <div class="nav-group">
-        <button class="nav-group-btn">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16 3h5v5M8 3H3v5M3 16v5h5M16 21h5v-5"/><circle cx="12" cy="12" r="3"/></svg>
-          <span>转换</span>
-          <svg class="chev" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="nav-dropdown">
-          <button class="dd-item" data-tool="pdf2img"><span>PDF → 图片</span></button>
-          <button class="dd-item" data-tool="img2pdf"><span>图片 → PDF</span></button>
-          <button class="dd-item" data-tool="toword"><span>PDF → Word</span></button>
-          <button class="dd-item" data-tool="tomarkdown"><span>PDF → Markdown</span></button>
-        </div>
-      </div>
+      <button class="dd-item" data-tool="pdf2img"><span>PDF → 图片</span></button>
+    <button class="dd-item" data-tool="img2pdf"><span>图片 → PDF</span></button>
+    <button class="dd-item" data-tool="toword"><span>PDF → Word</span></button>
+    <button class="dd-item" data-tool="tomarkdown"><span>PDF → Markdown</span></button>
+    
       
       <!-- 高级工具 -->
-      <div class="nav-group">
-        <button class="nav-group-btn">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-          <span>高级</span>
-          <svg class="chev" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="nav-dropdown">
-          <button class="dd-item" data-tool="ocr"><span>OCR 文字识别</span></button>
-          <button class="dd-item" data-tool="compare"><span>PDF 对比</span></button>
-          <button class="dd-item" data-tool="compress"><span>压缩 PDF</span></button>
-          <button class="dd-item" data-tool="metadata"><span>元数据编辑</span></button>
-          <button class="dd-item" data-tool="workflow"><span>自动化工作流</span></button>
-        </div>
-      </div>
+      <button class="dd-item" data-tool="ocr"><span>OCR 文字识别</span></button>
+    <button class="dd-item" data-tool="compare"><span>PDF 对比</span></button>
+    <button class="dd-item" data-tool="compress"><span>压缩 PDF</span></button>
+    <button class="dd-item" data-tool="metadata"><span>元数据编辑</span></button>
+    <button class="dd-item" data-tool="workflow"><span>自动化工作流</span></button>
+    
       
       <!-- 历史记录 - 直接按钮 -->
       <button class="nav-icon-btn" data-tool="history" title="历史记录">
@@ -1906,40 +1903,65 @@
 
     <!-- MERGE VIEW -->
     <div class="tool-view active" id="view-merge">
-      <div class="drop-hero">
-        <h1 style="font-size:1.6rem">合并 PDF</h1>
-        <p>上传多个 PDF，按上传顺序合并为一个文件</p>
-      </div>
-
-      <!-- File list for merge -->
-      <div id="mergeFileList" class="file-list"></div>
-
-      <!-- Drop zone for more files -->
-      <div class="drop-zone" id="mergeDropZone" style="padding:32px 24px;margin-bottom:20px">
-        <input type="file" id="mergeFileInput" accept=".pdf,application/pdf" multiple />
-        <svg width="36" height="36" viewBox="0 0 56 56" fill="none" style="margin:0 auto 12px;display:block;color:var(--accent)">
-          <circle cx="28" cy="28" r="24" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="2"/>
-          <path d="M28 20v16M20 28h16" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-        <h3 style="font-size:1rem">添加更多文件</h3>
-        <p style="font-size:0.78rem">拖入更多 PDF 或点击选择</p>
-      </div>
-
-      <!-- Action buttons -->
-      <div class="action-buttons" style="justify-content:center">
-        <button class="btn" onclick="resetAll()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-          重新开始
-        </button>
-        <button class="btn btn-primary" id="btn-merge" onclick="doMerge()" disabled>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 6H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/><path d="M16 6h3a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3"/><path d="M12 13v8"/><path d="m9 16 3-3-3-3"/></svg>
-          合并并下载
-        </button>
-      </div>
+<div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">合并 PDF</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+    <div class="tool-view-left">
+    
+    
+          <div class="drop-hero">
+            <h1 style="font-size:1.6rem">合并 PDF</h1>
+            <p>上传多个 PDF，按上传顺序合并为一个文件</p>
+          </div>
+    
+          <!-- File list for merge -->
+          <div id="mergeFileList" class="file-list"></div>
+    
+          <!-- Drop zone for more files -->
+          <div class="drop-zone" id="mergeDropZone" style="padding:32px 24px;margin-bottom:20px">
+            <input type="file" id="mergeFileInput" accept=".pdf,application/pdf" multiple />
+            <svg width="36" height="36" viewBox="0 0 56 56" fill="none" style="margin:0 auto 12px;display:block;color:var(--accent)">
+              <circle cx="28" cy="28" r="24" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="2"/>
+              <path d="M28 20v16M20 28h16" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <h3 style="font-size:1rem">添加更多文件</h3>
+            <p style="font-size:0.78rem">拖入更多 PDF 或点击选择</p>
+          </div>
+    
+          <!-- Action buttons -->
+          
+    </div>
+    <div class="tool-view-right">
+    <div class="action-buttons" style="justify-content:center">
+            <button class="btn" onclick="resetAll()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              重新开始
+            </button>
+            <button class="btn btn-primary" id="btn-merge" onclick="doMerge()" disabled>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 6H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/><path d="M16 6h3a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3"/><path d="M12 13v8"/><path d="m9 16 3-3-3-3"/></svg>
+              合并并下载
+            </button>
+          </div>
+        
+    </div>
     </div>
 
     <!-- SPLIT VIEW -->
     <div class="tool-view" id="view-split">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">拆分 PDF</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div class="drop-hero">
       <h1 style="font-size:1.6rem">拆分 PDF</h1>
@@ -1990,6 +2012,15 @@
 
     <!-- ROTATE VIEW -->
     <div class="tool-view" id="view-rotate">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">旋转页面</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div class="drop-hero">
       <h1 style="font-size:1.6rem">旋转页面</h1>
@@ -2044,6 +2075,15 @@
 
     <!-- DELETE VIEW -->
     <div class="tool-view" id="view-delete">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">删除页面</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div class="drop-hero">
       <h1 style="font-size:1.6rem">删除页面</h1>
@@ -2088,6 +2128,15 @@
 
     <!-- REORDER VIEW -->
     <div class="tool-view" id="view-reorder">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">页面排序</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div class="drop-hero">
       <h1 style="font-size:1.6rem">重排页面顺序</h1>
@@ -2123,6 +2172,15 @@
 
     <!-- PDF → IMG VIEW -->
     <div class="tool-view" id="view-pdf2img">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">PDF 转图片</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div class="drop-hero">
       <h1 style="font-size:1.6rem">PDF 转图片</h1>
@@ -2182,6 +2240,15 @@
 
     <!-- IMG → PDF VIEW -->
     <div class="tool-view" id="view-img2pdf">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">图片转 PDF</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div class="drop-hero">
       <h1 style="font-size:1.6rem">图片转 PDF</h1>
@@ -2244,6 +2311,15 @@
 
     <!-- WATERMARK VIEW -->
     <div class="tool-view" id="view-watermark">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">添加水印</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中为 PDF 添加水印</p></div></div>
       <div class="tool-view-right">
@@ -2349,6 +2425,15 @@
 
     <!-- COMPRESS VIEW -->
     <div class="tool-view" id="view-compress">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">压缩 PDF</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中压缩文件大小</p></div></div>
       <div class="tool-view-right">
@@ -2396,6 +2481,15 @@
 
     <!-- PASSWORD VIEW -->
     <div class="tool-view" id="view-password">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">PDF 加密</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中添加或移除密码</p></div></div>
       <div class="tool-view-right">
@@ -2437,6 +2531,15 @@
 
     <!-- PAGENUM VIEW -->
     <div class="tool-view" id="view-pagenum">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">添加页码</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中添加页码</p></div></div>
       <div class="tool-view-right">
@@ -2510,6 +2613,15 @@
 
     <!-- METADATA VIEW -->
     <div class="tool-view" id="view-metadata">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">元数据编辑</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中查看或编辑元数据</p></div></div>
       <div class="tool-view-right">
@@ -2566,6 +2678,15 @@
 
     <!-- TO MARKDOWN VIEW -->
     <div class="tool-view" id="view-tomarkdown">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">PDF 转 Markdown</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中提取文本内容</p></div></div>
       <div class="tool-view-right">
@@ -2630,6 +2751,15 @@
 
     <!-- TO WORD VIEW -->
     <div class="tool-view" id="view-toword">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">PDF 转 Word</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中转换为 Word 文档</p></div></div>
       <div class="tool-view-right">
@@ -2705,6 +2835,15 @@
 
     <!-- HIGHLIGHT / ANNOTATE VIEW -->
     <div class="tool-view" id="view-highlight">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">高亮标注</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div class="drop-hero">
       <h1 style="font-size:1.6rem">文字高亮与标注</h1>
@@ -2765,6 +2904,15 @@
 
     <!-- SIGNATURE VIEW -->
     <div class="tool-view" id="view-sign">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">电子签名</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div class="doc-viewer" id="signViewer">
       <div class="doc-viewer-toolbar">
@@ -2876,6 +3024,15 @@
 
     <!-- CROP VIEW -->
     <div class="tool-view" id="view-crop">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">裁剪页面</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div class="drop-hero">
       <h1 style="font-size:1.6rem">裁剪页面</h1>
@@ -2963,6 +3120,15 @@
 
     <!-- OCR VIEW -->
     <div class="tool-view" id="view-ocr">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">OCR 文字识别</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h3v3H7zM14 7h3v3h-3zM7 14h3v3H7zM14 14h3v3h-3z"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 或图片文件<br>然后在此工具中进行 OCR 识别</p></div></div>
       <div class="tool-view-right">
@@ -3031,6 +3197,15 @@
 
     <!-- PDF COMPARE VIEW -->
     <div class="tool-view" id="view-compare">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">PDF 对比</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传两个 PDF 文件<br>然后在此工具中进行对比</p></div></div>
       <div class="tool-view-right">
@@ -3113,6 +3288,15 @@
 
     <!-- WORKFLOW EDITOR VIEW -->
     <div class="tool-view" id="view-workflow">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">自动化工作流</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中执行批量处理流程</p></div></div>
       <div class="tool-view-right">
@@ -3178,6 +3362,15 @@
 
     <!-- WECHAT MINI PROGRAM INFO VIEW -->
     <div class="tool-view" id="view-wxmini">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">小程序码生成</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);border-radius:var(--radius-lg);border:2px dashed var(--border);min-height:300px;flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="opacity:0.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><p style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:0 24px">请先上传 PDF 文件<br>然后在此工具中生成小程序码</p></div></div>
       <div class="tool-view-right">
@@ -3255,6 +3448,15 @@
       </div>
     <!-- HISTORY VIEW -->
     <div class="tool-view" id="view-history">
+    <div class="tool-title-bar">
+      <button class="tool-back-btn" onclick="showHome()" title="返回首页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        返回
+      </button>
+      <h2 class="tool-title">历史记录</h2>
+      <span class="tool-title-spacer"></span>
+    </div>
+
       <div class="tool-view-left">
       <div class="drop-hero">
       <h1 style="font-size:1.6rem">处理历史</h1>
