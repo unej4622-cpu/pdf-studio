@@ -449,9 +449,8 @@
     /* ===== HERO / DROP ZONE - iOS Style ===== */
     .drop-hero {
       text-align: center;
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 0;
+      margin-bottom: 0;
+      padding-top: 0
     }
 
     .drop-hero h1 {
@@ -479,8 +478,6 @@
       padding: 60px 32px;
       text-align: center;
       cursor: pointer;
-      max-width: 640px;
-      margin: 0 auto;
       transition: all var(--duration-normal) var(--smooth);
       background: var(--bg-card-solid);
       margin-bottom: 20px;
@@ -1747,7 +1744,84 @@
       .wf-step-card { padding: 8px 10px; }
       .workflow-step-btn { padding: 6px 10px; font-size: 0.72rem; }
     }
-  </style>
+  /* ===== 全页面编辑器（通用） ===== */
+.full-page-editor {
+ display: flex;
+ flex-direction: column;
+ flex: 1;
+ min-height: 0;
+ background: var(--bg-tertiary);
+ border-radius: var(--radius-lg);
+ overflow: hidden;
+}
+.editor-toolbar {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ padding: 8px 12px;
+ background: var(--bg-card-solid);
+ border-bottom: 1px solid var(--border);
+ flex-shrink: 0;
+}
+.editor-toolbar .page-nav { display:flex; gap:4px; align-items:center; }
+.editor-toolbar .page-nav button {
+ width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+ background: var(--bg); color: var(--text); cursor: pointer; font-size: 0.9rem;
+ display: flex; align-items: center; justify-content: center;
+}
+.editor-toolbar .page-nav button:hover { background: var(--bg-card2); }
+.editor-toolbar .page-nav span {
+ font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-mono);
+ min-width: 50px; text-align: center;
+}
+.editor-toolbar .zoom-controls { display:flex; gap:4px; align-items:center; }
+.editor-toolbar .zoom-controls button {
+ width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+ background: var(--bg); color: var(--text); cursor: pointer; font-size: 0.85rem;
+ display: flex; align-items: center; justify-content: center;
+}
+.editor-toolbar .zoom-controls button:hover { background: var(--bg-card2); }
+.editor-toolbar .zoom-controls span {
+ font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);
+ min-width: 40px; text-align: center;
+}
+.editor-canvas-area {
+ flex: 1;
+ overflow: auto;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ padding: 20px;
+ gap: 16px;
+}
+.editor-canvas-area::-webkit-scrollbar { width: 6px; height: 6px; }
+.editor-canvas-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.editor-page-wrap {
+ position: relative;
+ box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+ border-radius: 4px;
+ overflow: hidden;
+ flex-shrink: 0;
+}
+.editor-page-wrap canvas { display: block; }
+.editor-overlay {
+ position: absolute;
+ inset: 0;
+ z-index: 2;
+}
+.editor-empty {
+ flex: 1;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ flex-direction: column;
+ gap: 12px;
+ color: var(--text-muted);
+}
+.editor-empty svg { opacity: 0.4; }
+.editor-empty p { font-size: 0.85rem; text-align: center; padding: 0 24px; }
+
+</style>
   <link rel="manifest" href="manifest.json">
 
 </head>
@@ -2205,13 +2279,7 @@
       </div>
       </div>
       <div class="file-list" id="img2pdfFileList"></div>
-      </div>
-      <div class="tool-view-right">
-        <div class="tool-panel">
-        <div class="tool-panel-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        PDF 页面设置
-        </div>
+      <div id="wmEditor"></div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
         <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--text-muted)">
         页面尺寸
@@ -2317,24 +2385,6 @@
       </div>
     </div>
 
-
-      <!-- 水印实时预览 -->
-      <div id="wmPreviewWrap" style="display:none;margin-bottom:16px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:0.78rem;color:var(--text-muted)">实时预览</span>
-          <div style="display:flex;gap:6px;align-items:center">
-            <button class="btn btn-sm" onclick="wmPreviewPrev()" title="上一页">←</button>
-            <span id="wmPreviewPageInfo" style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono)">1/1</span>
-            <button class="btn btn-sm" onclick="wmPreviewNext()" title="下一页">→</button>
-          </div>
-        </div>
-        <div style="position:relative;border:1px solid var(--border2);border-radius:10px;overflow:hidden;background:#fff;max-height:320px;display:flex;align-items:center;justify-content:center">
-          <canvas id="wmPreviewCanvas" style="max-width:100%;max-height:320px;display:block"></canvas>
-          <div id="wmPreviewLoading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg-card)">
-            <span style="color:var(--text-muted);font-size:0.8rem">加载中…</span>
-          </div>
-        </div>
-      </div>
 
       <div class="progress-wrap" id="wmProgress" style="display:none">
         <div class="progress-bar-bg"><div class="progress-bar" id="wmProgressBar"></div></div>
@@ -3353,6 +3403,249 @@ function escHTML(str) {
 
 // STATE
 // ============================================================
+// ============================================================
+// FULL PAGE EDITOR（通用 PDF 页面查看器/编辑器）
+// ============================================================
+class FullPageEditor {
+ constructor(containerId, options = {}) {
+ this.container = document.getElementById(containerId);
+ if (!this.container) { console.warn('FPE: container not found:', containerId); return; }
+ this.id = containerId;
+ this.pdf = null;
+ this.pageCount = 0;
+ this.currentPage = 1;
+ this.zoom = 'fit';
+ this.pageWraps = [];
+ this.rendering = false;
+ this._zoomTimer = null;
+ this.onPageRendered = options.onPageRendered || null;
+ this.onPageClick = options.onPageClick || null;
+ this.onOverlayDraw = options.onOverlayDraw || null;
+ this._buildDOM();
+ this._bindEvents();
+ }
+
+ _buildDOM() {
+ this.container.innerHTML = '';
+ this.container.className = 'full-page-editor';
+ this.toolbarEl = document.createElement('div');
+ this.toolbarEl.className = 'editor-toolbar';
+ this.toolbarEl.innerHTML = `
+ <div class="page-nav">
+ <button data-action="prev" title="上一页">‹</button>
+ <span class="page-info">1 / 1</span>
+ <button data-action="next" title="下一页">›</button>
+ </div>
+ <div class="zoom-controls">
+ <button data-action="zoom-out" title="缩小">−</button>
+ <span class="zoom-label">适应</span>
+ <button data-action="zoom-in" title="放大">+</button>
+ <button data-action="zoom-fit" title="适应宽度" style="font-size:0.7rem;width:auto;padding:0 8px">适应</button>
+ </div>
+ <div class="editor-custom-actions" style="margin-left:auto"></div>
+ `;
+ this.container.appendChild(this.toolbarEl);
+ this.scrollEl = document.createElement('div');
+ this.scrollEl.className = 'editor-canvas-area';
+ this.emptyEl = document.createElement('div');
+ this.emptyEl.className = 'editor-empty';
+ this.emptyEl.innerHTML = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p>请先上传 PDF 文件</p>`;
+ this.container.appendChild(this.scrollEl);
+ this.container.appendChild(this.emptyEl);
+ }
+
+ _bindEvents() {
+ this.toolbarEl.addEventListener('click', e => {
+ const btn = e.target.closest('[data-action]');
+ if (!btn) return;
+ const action = btn.dataset.action;
+ if (action === 'prev') this.prevPage();
+ else if (action === 'next') this.nextPage();
+ else if (action === 'zoom-in') this.zoomIn();
+ else if (action === 'zoom-out') this.zoomOut();
+ else if (action === 'zoom-fit') this.zoomFit();
+ });
+ this.scrollEl.addEventListener('scroll', () => this._updateCurrentPage(), { passive: true });
+ }
+
+ get customActionsEl() { return this.toolbarEl.querySelector('.editor-custom-actions'); }
+
+ async loadPdf(pdfBytes) {
+ await ensurePdfJs();
+ this.pdf = await pdfjsLib.getDocument({ data: new Uint8Array(pdfBytes) }).promise;
+ this.pageCount = this.pdf.numPages;
+ this.currentPage = 1;
+ this.emptyEl.style.display = 'none';
+ await this.renderAllPages();
+ }
+
+ async reloadPdf(pdfBytes) {
+ await ensurePdfJs();
+ this.pdf = await pdfjsLib.getDocument({ data: new Uint8Array(pdfBytes) }).promise;
+ this.pageCount = this.pdf.numPages;
+ this.emptyEl.style.display = 'none';
+ await this.renderAllPages();
+ }
+
+ reset() {
+ this.pdf = null;
+ this.pageCount = 0;
+ this.currentPage = 1;
+ this.pageWraps = [];
+ this.scrollEl.innerHTML = '';
+ this.emptyEl.style.display = 'flex';
+ this._updatePageInfo();
+ }
+
+ async renderAllPages() {
+ if (!this.pdf || this.rendering) return;
+ this.rendering = true;
+ this.scrollEl.innerHTML = '';
+ this.pageWraps = [];
+ const effectiveZoom = this._getEffectiveZoom();
+ const renderScale = effectiveZoom * 1.5;
+ for (let i = 1; i <= this.pageCount; i++) {
+ const wrap = document.createElement('div');
+ wrap.className = 'editor-page-wrap';
+ wrap.dataset.page = i;
+ const canvas = document.createElement('canvas');
+ wrap.appendChild(canvas);
+ if (this.onPageRendered || this.onOverlayDraw || this.onPageClick) {
+ const overlay = document.createElement('div');
+ overlay.className = 'editor-overlay';
+ wrap.appendChild(overlay);
+ }
+ this.scrollEl.appendChild(wrap);
+ this.pageWraps.push({ wrap, canvas });
+ try {
+ const page = await this.pdf.getPage(i);
+ const rotationDeg = state.pageRotations[i - 1] || 0;
+ const viewport = page.getViewport({ scale: renderScale, rotation: rotationDeg });
+ canvas.width = viewport.width;
+ canvas.height = viewport.height;
+ canvas.style.width = Math.round(595 * effectiveZoom) + 'px';
+ canvas.style.height = Math.round((viewport.height / viewport.width) * 595 * effectiveZoom) + 'px';
+ const ctx = canvas.getContext('2d');
+ ctx.fillStyle = '#ffffff';
+ ctx.fillRect(0, 0, canvas.width, canvas.height);
+ await page.render({ canvasContext: ctx, viewport }).promise;
+ if (this.onPageRendered) this.onPageRendered(i - 1, canvas, viewport);
+ } catch (err) {
+ console.error('FPE render page error:', i, err);
+ }
+ }
+ this.rendering = false;
+ this._updatePageInfo();
+ }
+
+ async rerenderPage(pageIndex) {
+ if (!this.pdf || !this.pageWraps[pageIndex]) return;
+ const effectiveZoom = this._getEffectiveZoom();
+ const renderScale = effectiveZoom * 1.5;
+ const { canvas } = this.pageWraps[pageIndex];
+ try {
+ const page = await this.pdf.getPage(pageIndex + 1);
+ const rotationDeg = state.pageRotations[pageIndex] || 0;
+ const viewport = page.getViewport({ scale: renderScale, rotation: rotationDeg });
+ canvas.width = viewport.width;
+ canvas.height = viewport.height;
+ canvas.style.width = Math.round(595 * effectiveZoom) + 'px';
+ canvas.style.height = Math.round((viewport.height / viewport.width) * 595 * effectiveZoom) + 'px';
+ const ctx = canvas.getContext('2d');
+ ctx.fillStyle = '#ffffff';
+ ctx.fillRect(0, 0, canvas.width, canvas.height);
+ await page.render({ canvasContext: ctx, viewport }).promise;
+ if (this.onPageRendered) this.onPageRendered(pageIndex, canvas, viewport);
+ } catch (err) {
+ console.error('FPE rerender error:', pageIndex, err);
+ }
+ }
+
+ _getEffectiveZoom() {
+ if (this.zoom === 'fit') {
+ const containerWidth = this.scrollEl.clientWidth - 40;
+ return Math.max(0.5, containerWidth / 595);
+ }
+ return this.zoom;
+ }
+
+ _updatePageInfo() {
+ const infoEl = this.toolbarEl.querySelector('.page-info');
+ if (infoEl) infoEl.textContent = this.currentPage + ' / ' + (this.pageCount || 1);
+ const labelEl = this.toolbarEl.querySelector('.zoom-label');
+ if (labelEl) labelEl.textContent = this.zoom === 'fit' ? '适应' : Math.round(this.zoom * 100) + '%';
+ }
+
+ _updateCurrentPage() {
+ if (!this.pageWraps.length) return;
+ const scrollCenter = this.scrollEl.scrollTop + this.scrollEl.clientHeight / 2;
+ for (let i = 0; i < this.pageWraps.length; i++) {
+ const el = this.pageWraps[i].wrap;
+ if (scrollCenter >= el.offsetTop && scrollCenter < el.offsetTop + el.offsetHeight) {
+ if (this.currentPage !== i + 1) {
+ this.currentPage = i + 1;
+ this._updatePageInfo();
+ }
+ break;
+ }
+ }
+ }
+
+ prevPage() {
+ if (this.currentPage > 1) {
+ this.currentPage--;
+ this.pageWraps[this.currentPage - 1]?.wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ this._updatePageInfo();
+ }
+ }
+
+ nextPage() {
+ if (this.currentPage < this.pageCount) {
+ this.currentPage++;
+ this.pageWraps[this.currentPage - 1]?.wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ this._updatePageInfo();
+ }
+ }
+
+ zoomIn() {
+ if (this.zoom === 'fit') this.zoom = this._getEffectiveZoom();
+ const levels = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
+ const idx = levels.findIndex(z => z > this.zoom + 0.01);
+ this.zoom = idx >= 0 ? levels[idx] : levels[levels.length - 1];
+ this._debouncedRender();
+ }
+
+ zoomOut() {
+ if (this.zoom === 'fit') this.zoom = this._getEffectiveZoom();
+ const levels = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
+ const idx = levels.findIndex(z => z >= this.zoom - 0.01);
+ this.zoom = idx > 0 ? levels[idx - 1] : levels[0];
+ this._debouncedRender();
+ }
+
+ zoomFit() {
+ this.zoom = 'fit';
+ this._debouncedRender();
+ }
+
+ _debouncedRender() {
+ clearTimeout(this._zoomTimer);
+ this._zoomTimer = setTimeout(() => this.renderAllPages(), 200);
+ }
+
+ scrollToPage(pageIndex) {
+ if (this.pageWraps[pageIndex]) {
+ this.pageWraps[pageIndex].wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ this.currentPage = pageIndex + 1;
+ this._updatePageInfo();
+ }
+ }
+
+ getCanvas(pageIndex) {
+ return this.pageWraps[pageIndex]?.canvas || null;
+ }
+}
+
 let state = {
   pdfDoc: null,         // pdf-lib doc
   pdfBytes: null,       // raw bytes
@@ -5002,13 +5295,68 @@ function setWmPos(pos) {
 // ============================================================
 // WATERMARK PREVIEW
 // ============================================================
+let wmEditor = null;
 let wmPreviewPdf = null;
 let wmPreviewPage = 0;
 let wmPreviewDebounce = null;
 
-function updateWmPreview() {
+function _drawWmOnCanvas(canvas, viewport) {
+  const ctx = canvas.getContext('2d');
+  const mode = wmMode;
+  const opacity = mode === 'text'
+    ? (parseFloat(document.getElementById('wmOpacity')?.value) || 20) / 100
+    : (parseFloat(document.getElementById('wmImgOpacity')?.value) || 30) / 100;
+  ctx.save();
+  ctx.globalAlpha = opacity;
+  if (mode === 'text') {
+    const text = document.getElementById('wmText')?.value.trim() || 'CONFIDENTIAL';
+    const fontSize = parseFloat(document.getElementById('wmFontSize')?.value) || 48;
+    const angleDeg = parseFloat(document.getElementById('wmAngle')?.value) || -45;
+    const scale = viewport.scale / 1.5;
+    ctx.font = `bold ${fontSize * scale}px sans-serif`;
+    ctx.fillStyle = 'rgba(128,128,128,1)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    if (wmPos === 'diagonal') {
+      ctx.translate(canvas.width/2, canvas.height/2);
+      ctx.rotate(angleDeg * Math.PI / 180);
+      ctx.fillText(text, 0, 0);
+    } else if (wmPos === 'center') {
+      ctx.fillText(text, canvas.width/2, canvas.height/2);
+    } else if (wmPos === 'corner') {
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(text, canvas.width - 10*scale, canvas.height - 10*scale);
+    }
+  } else if (mode === 'image' && wmImageBytes) {
+    const img = new Image();
+    img.src = URL.createObjectURL(new Blob([wmImageBytes]));
+    img.onload = () => {
+      const maxW = canvas.width * 0.5, maxH = canvas.height * 0.5;
+      const ratio = Math.min(maxW / img.width, maxH / img.height);
+      const iw = img.width * ratio, ih = img.height * ratio;
+      const cx = canvas.width / 2, cy = canvas.height / 2;
+      if (wmPos === 'diagonal') {
+        ctx.translate(cx, cy); ctx.rotate(-45 * Math.PI / 180);
+        ctx.drawImage(img, -iw/2, -ih/2, iw, ih);
+      } else if (wmPos === 'center') {
+        ctx.drawImage(img, cx-iw/2, cy-ih/2, iw, ih);
+      } else if (wmPos === 'corner') {
+        ctx.drawImage(img, canvas.width-iw-10, canvas.height-ih-10, iw, ih);
+      }
+      ctx.restore();
+      URL.revokeObjectURL(img.src);
+    };
+    return;
+  }
+  ctx.restore();
+}
   if (wmPreviewDebounce) clearTimeout(wmPreviewDebounce);
-  wmPreviewDebounce = setTimeout(_renderWmPreview, 200);
+  wmPreviewDebounce = setTimeout(() => {
+    if (wmEditor && wmEditor.pdf) {
+      wmEditor.renderAllPages();
+    }
+  }, 200);
 }
 
 async function _renderWmPreview() {
